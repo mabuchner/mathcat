@@ -1,0 +1,45 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 8px;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+}
+
+.problem {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  text-align: center;
+}
+
+.answer {
+  display: flex;
+  gap: 10px;
+  min-height: 56px;
+  align-items: center;
+  justify-content: center;
+}
+
+.digitBox {
+  width: 48px;
+  height: 56px;
+  border-radius: 14px;
+  background: var(--color-surface);
+  border: 3px solid var(--color-ring-track);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+
+.digitBoxFilled {
+  border-color: var(--color-primary);
+}

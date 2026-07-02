@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="A cheerful cartoon cat">
+  <rect width="400" height="400" rx="32" fill="#faf5ff"/>
+  <ellipse cx="200" cy="330" rx="120" ry="24" fill="#e9d5ff"/>
+  <g>
+    <polygon points="110,150 150,60 190,160" fill="#c4b5fd"/>
+    <polygon points="290,150 250,60 210,160" fill="#c4b5fd"/>
+    <polygon points="120,148 150,85 178,155" fill="#f472b6"/>
+    <polygon points="280,148 250,85 222,155" fill="#f472b6"/>
+  </g>
+  <ellipse cx="200" cy="230" rx="130" ry="115" fill="#ddd6fe"/>
+  <circle cx="150" cy="215" r="22" fill="#1f2937"/>
+  <circle cx="250" cy="215" r="22" fill="#1f2937"/>
+  <circle cx="157" cy="207" r="6" fill="#ffffff"/>
+  <circle cx="257" cy="207" r="6" fill="#ffffff"/>
+  <polygon points="200,250 182,272 218,272" fill="#f472b6"/>
+  <path d="M200 272 Q200 292 176 298" stroke="#1f2937" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M200 272 Q200 292 224 298" stroke="#1f2937" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <g stroke="#7c3aed" stroke-width="4" stroke-linecap="round" opacity="0.6">
+    <line x1="70" y1="220" x2="140" y2="228"/>
+    <line x1="70" y1="245" x2="140" y2="240"/>
+    <line x1="260" y1="228" x2="330" y2="220"/>
+    <line x1="260" y1="240" x2="330" y2="245"/>
+  </g>
+  <path d="M310 90 c14 -18 40 -18 40 8 c0 22 -40 40 -40 40 c0 0 -40 -18 -40 -40 c0 -26 26 -26 40 -8 Z" fill="#f472b6"/>
+</svg>

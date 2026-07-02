@@ -1,0 +1,71 @@
+.panel {
+  width: min(420px, 100%);
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.panel h2 {
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+.panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.chipGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.chip {
+  border: 2px solid var(--color-ring-track);
+  background: var(--color-surface);
+  border-radius: 14px;
+  padding: 12px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-soft);
+  cursor: pointer;
+}
+
+.chipSelected {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: white;
+}
+
+.toggleRow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 1.05rem;
+}
+
+.toggleRow label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.doneButton {
+  border: none;
+  border-radius: 20px;
+  background: var(--color-primary);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 14px 0;
+  box-shadow: 0 4px 0 var(--color-primary-dark);
+  cursor: pointer;
+}
+
+.doneButton:active {
+  transform: translateY(4px);
+  box-shadow: none;
+}

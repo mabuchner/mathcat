@@ -1,0 +1,68 @@
+.menu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 32px 24px;
+}
+
+.logo {
+  font-size: 5rem;
+  line-height: 1;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  letter-spacing: -1px;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--color-text-soft);
+  margin-top: -12px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 320px;
+  margin-top: 12px;
+}
+
+.btn {
+  border: none;
+  border-radius: 20px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  padding: 18px 0;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn:active {
+  transform: translateY(4px);
+  box-shadow: none !important;
+}
+
+.btnPlay {
+  background: var(--color-primary);
+  color: white;
+  box-shadow: 0 5px 0 var(--color-primary-dark);
+  font-size: 1.5rem;
+}
+
+.btnSettings {
+  background: var(--color-surface);
+  color: var(--color-primary-dark);
+  box-shadow: 0 5px 0 #ddd6fe;
+}

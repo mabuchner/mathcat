@@ -1,0 +1,66 @@
+:root {
+  --color-bg: #f5f3ff;
+  --color-surface: #ffffff;
+  --color-primary: #7c3aed;
+  --color-primary-dark: #5b21b6;
+  --color-text: #1f2937;
+  --color-text-soft: #6b6375;
+  --color-success: #16a34a;
+  --color-success-bg: #dcfce7;
+  --color-warm: #f97316;
+  --color-warm-bg: #fff7ed;
+  --color-ring-track: #ede9fe;
+  --font-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+
+  color-scheme: light;
+  font: 18px/1.4 var(--font-sans);
+  color: var(--color-text);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--color-bg);
+}
+
+body {
+  overscroll-behavior: none;
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
