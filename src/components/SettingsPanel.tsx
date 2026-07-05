@@ -1,3 +1,4 @@
+import type { Operation } from '../game/types'
 import type { Settings } from '../settings/types'
 import styles from './SettingsPanel.module.css'
 
@@ -9,6 +10,12 @@ export interface SettingsPanelProps {
 
 const ALL_TABLES = Array.from({ length: 12 }, (_, index) => index + 1)
 
+const ALL_OPERATIONS: { value: Operation; label: string }[] = [
+  { value: 'addition',       label: '+ Add' },
+  { value: 'subtraction',    label: '− Subtract' },
+  { value: 'multiplication', label: '× Multiply' },
+]
+
 export function SettingsPanel({ settings, onChange, onClose }: SettingsPanelProps) {
   function toggleTable(table: number) {
     const isSelected = settings.tables.includes(table)
@@ -19,9 +26,35 @@ export function SettingsPanel({ settings, onChange, onClose }: SettingsPanelProp
     onChange({ tables: nextTables })
   }
 
+  function toggleOperation(op: Operation) {
+    const isSelected = settings.operations.includes(op)
+    if (isSelected && settings.operations.length === 1) return
+    const next = isSelected
+      ? settings.operations.filter((o) => o !== op)
+      : [...settings.operations, op]
+    onChange({ operations: next })
+  }
+
   return (
     <div className={styles.panel}>
       <h2>Settings</h2>
+
+      <section>
+        <h3>Operations</h3>
+        <div className={styles.operationChips}>
+          {ALL_OPERATIONS.map(({ value, label }) => (
+            <button
+              key={value}
+              type="button"
+              className={`${styles.chip} ${settings.operations.includes(value) ? styles.chipSelected : ''}`}
+              onClick={() => toggleOperation(value)}
+              aria-pressed={settings.operations.includes(value)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </section>
 
       <section>
         <h3>Tables to practice</h3>

@@ -10,11 +10,11 @@ export function MainMenu({ onPlay, onSettings }: MainMenuProps) {
     <div className={styles.menu}>
       <p className={styles.logo}>🐱</p>
       <h1 className={styles.title}>MathCat</h1>
-      <p className={styles.subtitle}>Multiplication practice</p>
+      <p className={styles.subtitle}>Math practice</p>
 
       <div className={styles.buttons}>
         <button type="button" className={`${styles.btn} ${styles.btnPlay}`} onClick={onPlay}>
-          ✖️ Play
+          ▶️ Play
         </button>
         <button type="button" className={`${styles.btn} ${styles.btnSettings}`} onClick={onSettings}>
           ⚙️ Settings

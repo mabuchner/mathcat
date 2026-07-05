@@ -1,6 +1,9 @@
+export type Operation = 'addition' | 'subtraction' | 'multiplication'
+
 export interface Problem {
   a: number
   b: number
+  operation: Operation
   answer: number
 }
 

@@ -58,7 +58,6 @@
   background: var(--color-primary);
   color: white;
   box-shadow: 0 5px 0 var(--color-primary-dark);
-  font-size: 1.5rem;
 }
 
 .btnSettings {

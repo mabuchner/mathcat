@@ -26,20 +26,20 @@ describe('generateProblem', () => {
 
   it('avoids immediately repeating the previous problem when a different one is reachable', () => {
     // tables: [2, 5] — random sequence picks indices into that array
-    // first call: index 0 → a=2, index 0 → b=2 (same as previous { a:2, b:2 })
-    // second call: index 0 → a=2, index 1 → b=5 (different)
-    const previous: Problem = { a: 2, b: 2, answer: 4 }
-    const sequence = [0, 0, 0, 0.9]
+    // first call (operation): 0 → multiplication; index 0 → a=2, index 0 → b=2 (same as previous { a:2, b:2 })
+    // second call (operation): 0 → multiplication; index 0 → a=2, index 0.9 → b=5 (different)
+    const previous: Problem = { a: 2, b: 2, operation: 'multiplication', answer: 4 }
+    const sequence = [0, 0, 0, 0, 0, 0.9]
     let i = 0
     const random = () => sequence[i++]
     const problem = generateProblem({ tables: [2, 5], previous, random })
-    expect(problem).toEqual({ a: 2, b: 5, answer: 10 })
+    expect(problem).toEqual({ a: 2, b: 5, operation: 'multiplication', answer: 10 })
   })
 
   it('terminates instead of looping forever if the random source keeps producing the previous problem', () => {
-    const previous: Problem = { a: 2, b: 2, answer: 4 }
+    const previous: Problem = { a: 2, b: 2, operation: 'multiplication', answer: 4 }
     const random = () => 0
     const problem = generateProblem({ tables: [2], previous, random })
-    expect(problem).toEqual({ a: 2, b: 2, answer: 4 })
+    expect(problem).toEqual({ a: 2, b: 2, operation: 'multiplication', answer: 4 })
   })
 })

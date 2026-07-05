@@ -17,7 +17,10 @@ export function useGame(settings: Settings): UseGameResult {
   const [state, dispatch] = useReducer(
     gameReducer,
     settings,
-    (initialSettings) => createInitialGameState(generateProblem({ tables: initialSettings.tables })),
+    (initialSettings) =>
+      createInitialGameState(
+        generateProblem({ tables: initialSettings.tables, operations: initialSettings.operations }),
+      ),
   )
   const problemRef = useRef(state.problem)
   problemRef.current = state.problem
@@ -44,9 +47,13 @@ export function useGame(settings: Settings): UseGameResult {
   )
 
   const continueGame = useCallback(() => {
-    const problem = generateProblem({ tables: settings.tables, previous: problemRef.current })
+    const problem = generateProblem({
+      tables: settings.tables,
+      operations: settings.operations,
+      previous: problemRef.current,
+    })
     dispatch({ type: 'CONTINUE', problem })
-  }, [settings.tables])
+  }, [settings.tables, settings.operations])
 
   return { state, remainingMs, durationMs, submitAnswer, continueGame }
 }

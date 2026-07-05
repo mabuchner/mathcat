@@ -1,6 +1,6 @@
-# MathCat 🐱✖️
+# MathCat 🐱
 
-A friendly multiplication-tables practice game. Answer a problem before the countdown runs out to win a random cat picture; a wrong answer or a timeout gets a gentle encouraging message instead. Built as an installable Progressive Web App so it works the same way on Android (Chrome) and iOS (Safari, "Add to Home Screen") without any app store.
+A friendly mental-arithmetic practice game covering addition, subtraction, and multiplication. Answer a problem before the countdown runs out to win a random cat picture; a wrong answer or a timeout gets a gentle encouraging message instead. Built as an installable Progressive Web App so it works the same way on Android (Chrome) and iOS (Safari, "Add to Home Screen") without any app store.
 
 ## Running it locally
 
@@ -41,7 +41,7 @@ npm run test:watch  # watch mode
 
 - **Cat images** come from [cataas.com](https://cataas.com) via a plain `<img>` tag (no API key, no CORS issues). If the network is unavailable, a bundled illustrated cat (`src/cats/fallback-cat.svg`) is shown instead.
 - **Sound effects** are synthesized at runtime with the Web Audio API — no audio files are bundled or downloaded.
-- **Settings** (which tables to practice, countdown duration, sound/ticking toggles) are stored in the browser's `localStorage`.
+- **Settings** (which operations and tables to practice, countdown duration, sound/ticking toggles) are stored in the browser's `localStorage`.
 
 ## Project structure
 

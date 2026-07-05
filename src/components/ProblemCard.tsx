@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Problem } from '../game/types'
+import { OPERATION_SYMBOL } from '../game/operationSymbol'
 import { playTick } from '../sound/sounds'
 import { CountdownRing } from './CountdownRing'
 import { Keypad } from './Keypad'
@@ -54,7 +55,7 @@ export function ProblemCard({ problem, remainingMs, durationMs, tickingEnabled, 
         <CountdownRing remainingMs={remainingMs} durationMs={durationMs} />
       </div>
       <p className={styles.problem}>
-        {problem.a} × {problem.b}
+        {problem.a} {OPERATION_SYMBOL[problem.operation]} {problem.b}
       </p>
       <div className={styles.answer} aria-live="polite">
         {digitSlots.map((digit, index) => (

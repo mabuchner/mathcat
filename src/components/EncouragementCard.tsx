@@ -1,6 +1,7 @@
 import { useMemo, useRef } from 'react'
 import { pickEncouragement } from '../game/messages'
 import type { FeedbackReason, Problem } from '../game/types'
+import { OPERATION_SYMBOL } from '../game/operationSymbol'
 import styles from './EncouragementCard.module.css'
 
 export interface EncouragementCardProps {
@@ -23,7 +24,7 @@ export function EncouragementCard({ reason, problem, onContinue }: Encouragement
       <p className={styles.emoji}>{reason === 'timeout' ? '⏰' : '🙂'}</p>
       <p className={styles.message}>{message}</p>
       <p className={styles.answerReveal}>
-        {problem.a} × {problem.b} = {problem.answer}
+        {problem.a} {OPERATION_SYMBOL[problem.operation]} {problem.b} = {problem.answer}
       </p>
       <button type="button" className={styles.continueButton} onClick={onContinue}>
         Next →

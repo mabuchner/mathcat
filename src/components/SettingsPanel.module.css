@@ -23,6 +23,16 @@
   gap: 10px;
 }
 
+.operationChips {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.operationChips .chip {
+  padding: 12px 8px;
+}
+
 .chip {
   border: 2px solid var(--color-ring-track);
   background: var(--color-surface);
