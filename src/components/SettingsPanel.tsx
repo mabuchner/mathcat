@@ -74,13 +74,14 @@ export function SettingsPanel({ settings, onChange, onClose }: SettingsPanelProp
       </section>
 
       <section>
-        <h3>Time limit: {settings.countdownSeconds}s</h3>
+        <h3>Game length: {settings.gameDurationSeconds}s</h3>
         <input
           type="range"
-          min={5}
-          max={20}
-          value={settings.countdownSeconds}
-          onChange={(event) => onChange({ countdownSeconds: Number(event.target.value) })}
+          min={30}
+          max={180}
+          step={30}
+          value={settings.gameDurationSeconds}
+          onChange={(event) => onChange({ gameDurationSeconds: Number(event.target.value) })}
         />
       </section>
 
@@ -92,14 +93,6 @@ export function SettingsPanel({ settings, onChange, onClose }: SettingsPanelProp
             onChange={(event) => onChange({ soundEnabled: event.target.checked })}
           />
           Sound effects
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            checked={settings.tickingEnabled}
-            onChange={(event) => onChange({ tickingEnabled: event.target.checked })}
-          />
-          Countdown ticking
         </label>
       </section>
 

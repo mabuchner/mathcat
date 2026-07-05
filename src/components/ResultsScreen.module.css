@@ -1,0 +1,87 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  min-height: 0;
+  flex: 1;
+}
+
+.tierEmoji {
+  font-size: 5rem;
+  line-height: 1;
+}
+
+.message {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.scores {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  background: #f5f5f5;
+  border-radius: 1rem;
+  padding: 1.25rem 2rem;
+}
+
+.scoreItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.scoreCount {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.correct {
+  color: #22c55e;
+}
+
+.incorrect {
+  color: #ef4444;
+}
+
+.scoreLabel {
+  font-size: 0.85rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.scoreDivider {
+  width: 1px;
+  height: 3rem;
+  background: #ddd;
+}
+
+.playAgainButton {
+  margin-top: 0.5rem;
+  padding: 0.9rem 2.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.playAgainButton:hover {
+  background: #4f46e5;
+}
+
+.playAgainButton:active {
+  background: #4338ca;
+}

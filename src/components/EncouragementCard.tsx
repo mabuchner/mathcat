@@ -1,16 +1,15 @@
 import { useMemo, useRef } from 'react'
 import { pickEncouragement } from '../game/messages'
-import type { FeedbackReason, Problem } from '../game/types'
+import type { Problem } from '../game/types'
 import { OPERATION_SYMBOL } from '../game/operationSymbol'
 import styles from './EncouragementCard.module.css'
 
 export interface EncouragementCardProps {
-  reason: FeedbackReason | undefined
   problem: Problem
   onContinue: () => void
 }
 
-export function EncouragementCard({ reason, problem, onContinue }: EncouragementCardProps) {
+export function EncouragementCard({ problem, onContinue }: EncouragementCardProps) {
   const lastMessageRef = useRef<string | undefined>(undefined)
   const message = useMemo(() => {
     const picked = pickEncouragement(lastMessageRef.current)
@@ -21,7 +20,7 @@ export function EncouragementCard({ reason, problem, onContinue }: Encouragement
 
   return (
     <div className={styles.card}>
-      <p className={styles.emoji}>{reason === 'timeout' ? '⏰' : '🙂'}</p>
+      <p className={styles.emoji}>🙂</p>
       <p className={styles.message}>{message}</p>
       <p className={styles.answerReveal}>
         {problem.a} {OPERATION_SYMBOL[problem.operation]} {problem.b} = {problem.answer}

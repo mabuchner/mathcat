@@ -71,3 +71,22 @@ export function playTick(): void {
   const ctx = getAudioContext()
   playTone(ctx, { frequency: 880, startTime: ctx.currentTime, duration: 0.05, type: 'square', peakGain: 0.08 })
 }
+
+/** Triumphant fanfare for a great final score (≥ 60% correct). */
+export function playVictory(): void {
+  const ctx = getAudioContext()
+  const now = ctx.currentTime
+  const notes = [523.25, 659.25, 783.99, 1046.5] // C5, E5, G5, C6
+  notes.forEach((frequency, index) => {
+    playTone(ctx, { frequency, startTime: now + index * 0.12, duration: 0.22, type: 'triangle', peakGain: 0.3 })
+  })
+}
+
+/** Gentle, warm close for a lower final score — encouraging, not punitive. */
+export function playGameOver(): void {
+  const ctx = getAudioContext()
+  const now = ctx.currentTime
+  playTone(ctx, { frequency: 523.25, startTime: now, duration: 0.25, type: 'sine', peakGain: 0.2 })
+  playTone(ctx, { frequency: 440, startTime: now + 0.2, duration: 0.25, type: 'sine', peakGain: 0.18 })
+  playTone(ctx, { frequency: 392, startTime: now + 0.4, duration: 0.35, type: 'sine', peakGain: 0.15 })
+}

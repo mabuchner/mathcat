@@ -1,36 +1,30 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import type { Problem } from '../game/types'
 import { OPERATION_SYMBOL } from '../game/operationSymbol'
-import { playTick } from '../sound/sounds'
 import { CountdownRing } from './CountdownRing'
 import { Keypad } from './Keypad'
 import styles from './ProblemCard.module.css'
 
 export interface ProblemCardProps {
   problem: Problem
-  remainingMs: number
-  durationMs: number
-  tickingEnabled: boolean
+  globalRemainingMs: number
+  globalDurationMs: number
   onSubmit: (value: number) => void
 }
 
-const TICK_WINDOW_MS = 3000
 const SUBMIT_DELAY_MS = 400
 
-export function ProblemCard({ problem, remainingMs, durationMs, tickingEnabled, onSubmit }: ProblemCardProps) {
+function formatMinSec(ms: number): string {
+  const totalSeconds = Math.ceil(ms / 1000)
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
+  return `${minutes}:${String(seconds).padStart(2, '0')}`
+}
+
+export function ProblemCard({ problem, globalRemainingMs, globalDurationMs, onSubmit }: ProblemCardProps) {
   const [input, setInput] = useState('')
   const [pendingSubmit, setPendingSubmit] = useState(false)
-  const lastTickSecondRef = useRef<number | null>(null)
   const expectedLength = String(problem.answer).length
-
-  useEffect(() => {
-    if (!tickingEnabled || remainingMs > TICK_WINDOW_MS || remainingMs <= 0) return
-    const currentSecond = Math.ceil(remainingMs / 1000)
-    if (lastTickSecondRef.current !== currentSecond) {
-      lastTickSecondRef.current = currentSecond
-      playTick()
-    }
-  }, [remainingMs, tickingEnabled])
 
   function appendDigit(digit: number) {
     if (input.length >= expectedLength || pendingSubmit) return
@@ -52,7 +46,12 @@ export function ProblemCard({ problem, remainingMs, durationMs, tickingEnabled, 
   return (
     <div className={styles.card}>
       <div className={styles.header}>
-        <CountdownRing remainingMs={remainingMs} durationMs={durationMs} />
+        <CountdownRing
+          remainingMs={globalRemainingMs}
+          durationMs={globalDurationMs}
+          label={formatMinSec(globalRemainingMs)}
+          size={96}
+        />
       </div>
       <p className={styles.problem}>
         {problem.a} {OPERATION_SYMBOL[problem.operation]} {problem.b}

@@ -1,14 +1,14 @@
 import { useCallback, useReducer, useRef } from 'react'
 import { generateProblem } from './problemGenerator'
 import { createInitialGameState, gameReducer } from './gameReducer'
-import { useCountdown } from './useCountdown'
+import { useGlobalTimer } from './useGlobalTimer'
 import type { GameState } from './types'
 import type { Settings } from '../settings/types'
 
 export interface UseGameResult {
   state: GameState
-  remainingMs: number
-  durationMs: number
+  globalRemainingMs: number
+  globalDurationMs: number
   submitAnswer: (value: number) => void
   continueGame: () => void
 }
@@ -25,18 +25,16 @@ export function useGame(settings: Settings): UseGameResult {
   const problemRef = useRef(state.problem)
   problemRef.current = state.problem
 
-  const durationMs = settings.countdownSeconds * 1000
+  const globalDurationMs = settings.gameDurationSeconds * 1000
 
-  const handleExpire = useCallback(() => {
-    dispatch({ type: 'TIME_UP', problemId: state.problemId })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.problemId])
+  const handleGameOver = useCallback(() => {
+    dispatch({ type: 'GAME_OVER' })
+  }, [])
 
-  const { remainingMs } = useCountdown({
-    durationMs,
-    active: state.phase === 'question',
-    resetKey: state.problemId,
-    onExpire: handleExpire,
+  const { remainingMs: globalRemainingMs } = useGlobalTimer({
+    totalMs: globalDurationMs,
+    paused: state.phase !== 'question',
+    onExpire: handleGameOver,
   })
 
   const submitAnswer = useCallback(
@@ -55,5 +53,5 @@ export function useGame(settings: Settings): UseGameResult {
     dispatch({ type: 'CONTINUE', problem })
   }, [settings.tables, settings.operations])
 
-  return { state, remainingMs, durationMs, submitAnswer, continueGame }
+  return { state, globalRemainingMs, globalDurationMs, submitAnswer, continueGame }
 }

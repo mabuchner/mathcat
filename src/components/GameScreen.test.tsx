@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { DEFAULT_SETTINGS } from '../settings/types'
@@ -7,14 +7,15 @@ import { GameScreen } from './GameScreen'
 vi.mock('../sound/sounds', () => ({
   playCorrect: vi.fn(),
   playTryAgain: vi.fn(),
-  playTick: vi.fn(),
+  playVictory: vi.fn(),
+  playGameOver: vi.fn(),
 }))
 
 vi.mock('../cats/catImage', () => ({
   buildRandomCatUrl: () => 'https://cataas.com/cat?test',
 }))
 
-const settings = { ...DEFAULT_SETTINGS, tables: [7], countdownSeconds: 10 }
+const settings = { ...DEFAULT_SETTINGS, tables: [7] }
 
 function getProblemText() {
   return screen.getByText(/×/).textContent ?? ''
@@ -43,7 +44,7 @@ describe('GameScreen', () => {
     vi.useRealTimers()
   })
 
-  it('shows a cat reward after a correct, in-time answer', async () => {
+  it('shows a cat reward after a correct answer', async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
     render(<GameScreen settings={settings} onHome={() => {}} />)
 
@@ -66,15 +67,5 @@ describe('GameScreen', () => {
     await typeDigits(user, wrongDigitsSameLength(correct))
 
     expect(await screen.findByText(new RegExp(`${a} × ${b} = ${correct}`))).toBeInTheDocument()
-  })
-
-  it('shows encouragement with a timeout reason once the countdown runs out', async () => {
-    render(<GameScreen settings={{ ...settings, countdownSeconds: 5 }} onHome={() => {}} />)
-
-    act(() => {
-      vi.advanceTimersByTime(5100)
-    })
-
-    expect(await screen.findByText('⏰')).toBeInTheDocument()
   })
 })

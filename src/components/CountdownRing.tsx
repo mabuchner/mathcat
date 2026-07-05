@@ -4,6 +4,7 @@ export interface CountdownRingProps {
   remainingMs: number
   durationMs: number
   size?: number
+  label?: string
 }
 
 const STROKE_WIDTH = 10
@@ -14,12 +15,12 @@ function colorForFraction(fraction: number): string {
   return '#f97316'
 }
 
-export function CountdownRing({ remainingMs, durationMs, size = 96 }: CountdownRingProps) {
+export function CountdownRing({ remainingMs, durationMs, size = 96, label }: CountdownRingProps) {
   const fraction = durationMs > 0 ? Math.min(1, Math.max(0, remainingMs / durationMs)) : 0
   const radius = (size - STROKE_WIDTH) / 2
   const circumference = 2 * Math.PI * radius
   const dashOffset = circumference * (1 - fraction)
-  const secondsLeft = Math.ceil(remainingMs / 1000)
+  const displayLabel = label ?? String(Math.ceil(remainingMs / 1000))
 
   return (
     <svg
@@ -28,7 +29,7 @@ export function CountdownRing({ remainingMs, durationMs, size = 96 }: CountdownR
       height={size}
       viewBox={`0 0 ${size} ${size}`}
       role="timer"
-      aria-label={`${secondsLeft} seconds left`}
+      aria-label={`${displayLabel} left`}
     >
       <circle className={styles.track} cx={size / 2} cy={size / 2} r={radius} strokeWidth={STROKE_WIDTH} />
       <circle
@@ -42,7 +43,7 @@ export function CountdownRing({ remainingMs, durationMs, size = 96 }: CountdownR
         strokeDashoffset={dashOffset}
       />
       <text x="50%" y="52%" textAnchor="middle" dominantBaseline="middle" className={styles.label}>
-        {secondsLeft}
+        {displayLabel}
       </text>
     </svg>
   )

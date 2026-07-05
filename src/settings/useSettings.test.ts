@@ -23,14 +23,14 @@ describe('useSettings', () => {
     const { result } = renderHook(() => useSettings())
 
     act(() => {
-      result.current.setSettings({ countdownSeconds: 15, soundEnabled: false })
+      result.current.setSettings({ gameDurationSeconds: 60, soundEnabled: false })
     })
 
-    expect(result.current.settings.countdownSeconds).toBe(15)
+    expect(result.current.settings.gameDurationSeconds).toBe(60)
     expect(result.current.settings.soundEnabled).toBe(false)
 
     const stored = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? '{}')
-    expect(stored.countdownSeconds).toBe(15)
+    expect(stored.gameDurationSeconds).toBe(60)
     expect(stored.soundEnabled).toBe(false)
   })
 
