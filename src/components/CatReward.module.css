@@ -37,14 +37,26 @@
 }
 
 .placeholder {
-  font-size: 4rem;
-  opacity: 0.4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
   animation: pulse 1s ease-in-out infinite alternate;
 }
 
+.placeholderPaws {
+  font-size: 4rem;
+}
+
+.placeholderText {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-muted, #6b7280);
+}
+
 @keyframes pulse {
-  from { opacity: 0.3; }
-  to { opacity: 0.6; }
+  from { opacity: 0.2; }
+  to { opacity: 1; }
 }
 
 .continueButton {

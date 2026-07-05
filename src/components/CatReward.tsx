@@ -17,7 +17,12 @@ export function CatReward({ catUrl, onContinue }: CatRewardProps) {
     <div className={styles.card}>
       <p className={styles.title}>Correct! 🎉</p>
       <div className={styles.imageWrap}>
-        {!imageLoaded && <span className={styles.placeholder}>🐾</span>}
+        {!imageLoaded && (
+          <div className={styles.placeholder}>
+            <span className={styles.placeholderPaws}>🐾</span>
+            <span className={styles.placeholderText}>Loading cat…</span>
+          </div>
+        )}
         <img
           className={`${styles.image} ${imageLoaded ? '' : styles.imageHidden}`}
           src={src}
