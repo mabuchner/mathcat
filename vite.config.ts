@@ -6,6 +6,7 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/mathcat/',
   plugins: [
     react(),
     basicSsl(),
@@ -21,8 +22,8 @@ export default defineConfig({
         background_color: '#6d28d9',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/',
-        scope: '/',
+        start_url: '/mathcat/',
+        scope: '/mathcat/',
         icons: [
           { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
           { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
