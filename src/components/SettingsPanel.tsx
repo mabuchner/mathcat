@@ -57,7 +57,7 @@ export function SettingsPanel({ settings, onChange, onClose }: SettingsPanelProp
       </section>
 
       <section>
-        <h3>Tables to practice</h3>
+        <h3>Numbers to practice</h3>
         <div className={styles.chipGrid}>
           {ALL_TABLES.map((table) => (
             <button

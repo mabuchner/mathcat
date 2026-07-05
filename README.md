@@ -41,7 +41,7 @@ npm run test:watch  # watch mode
 
 - **Cat images** come from [cataas.com](https://cataas.com) via a plain `<img>` tag (no API key, no CORS issues). If the network is unavailable, a bundled illustrated cat (`src/cats/fallback-cat.svg`) is shown instead.
 - **Sound effects** are synthesized at runtime with the Web Audio API — no audio files are bundled or downloaded.
-- **Settings** (which operations and tables to practice, countdown duration, sound/ticking toggles) are stored in the browser's `localStorage`.
+- **Settings** (which operations and numbers to practice, countdown duration, sound/ticking toggles) are stored in the browser's `localStorage`.
 
 ## Project structure
 
