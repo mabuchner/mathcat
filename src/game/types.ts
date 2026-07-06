@@ -1,3 +1,5 @@
+export const GAME_DURATION_SECONDS = 60
+
 export type Operation = 'addition' | 'subtraction' | 'multiplication'
 
 export interface Problem {

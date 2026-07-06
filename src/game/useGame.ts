@@ -2,6 +2,7 @@ import { useCallback, useReducer, useRef } from 'react'
 import { generateProblem } from './problemGenerator'
 import { createInitialGameState, gameReducer } from './gameReducer'
 import { useGlobalTimer } from './useGlobalTimer'
+import { GAME_DURATION_SECONDS } from './types'
 import type { GameState } from './types'
 import type { Settings } from '../settings/types'
 
@@ -25,7 +26,7 @@ export function useGame(settings: Settings): UseGameResult {
   const problemRef = useRef(state.problem)
   problemRef.current = state.problem
 
-  const globalDurationMs = settings.gameDurationSeconds * 1000
+  const globalDurationMs = GAME_DURATION_SECONDS * 1000
 
   const handleGameOver = useCallback(() => {
     dispatch({ type: 'GAME_OVER' })
