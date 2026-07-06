@@ -17,7 +17,7 @@ export default defineConfig({
       manifest: {
         name: 'MathCat',
         short_name: 'MathCat',
-        description: 'A friendly multiplication tables practice game with cat picture rewards.',
+        description: 'A friendly mental-arithmetic practice game covering addition, subtraction, and multiplication, with cat picture rewards.',
         theme_color: '#6d28d9',
         background_color: '#6d28d9',
         display: 'standalone',
