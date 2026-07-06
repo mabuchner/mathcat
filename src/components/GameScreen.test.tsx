@@ -16,6 +16,7 @@ vi.mock('../cats/catImage', () => ({
 }))
 
 const settings = { ...DEFAULT_SETTINGS, tables: [7] }
+const recordScore = () => ({ isNewHighScore: false, rank: null })
 
 function getProblemText() {
   return screen.getByText(/×/).textContent ?? ''
@@ -46,7 +47,7 @@ describe('GameScreen', () => {
 
   it('shows a cat reward after a correct answer', async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
-    render(<GameScreen settings={settings} onHome={() => {}} />)
+    render(<GameScreen settings={settings} recordScore={recordScore} onHome={() => {}} />)
 
     const problemText = getProblemText()
     const [a, b] = problemText.split('×').map((part) => Number(part.trim()))
@@ -58,7 +59,7 @@ describe('GameScreen', () => {
 
   it('shows encouragement after a wrong answer', async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
-    render(<GameScreen settings={settings} onHome={() => {}} />)
+    render(<GameScreen settings={settings} recordScore={recordScore} onHome={() => {}} />)
 
     const problemText = getProblemText()
     const [a, b] = problemText.split('×').map((part) => Number(part.trim()))

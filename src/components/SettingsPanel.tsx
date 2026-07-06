@@ -73,18 +73,6 @@ export function SettingsPanel({ settings, onChange, onClose }: SettingsPanelProp
         </div>
       </section>
 
-      <section>
-        <h3>Game length: {settings.gameDurationSeconds}s</h3>
-        <input
-          type="range"
-          min={30}
-          max={180}
-          step={30}
-          value={settings.gameDurationSeconds}
-          onChange={(event) => onChange({ gameDurationSeconds: Number(event.target.value) })}
-        />
-      </section>
-
       <section className={styles.toggleRow}>
         <label>
           <input

@@ -3,25 +3,34 @@ import styles from './ResultsScreen.module.css'
 export interface ResultsScreenProps {
   correctCount: number
   incorrectCount: number
-  gameDurationSeconds: number
+  isNewHighScore?: boolean
+  rank?: number | null
   onPlayAgain: () => void
 }
 
-function getTier(correctCount: number, gameDurationSeconds: number): { emoji: string; message: string } {
-  const correctPerMinute = correctCount / (gameDurationSeconds / 60)
-  if (correctPerMinute >= 12) return { emoji: '🌟', message: 'Amazing!' }
-  if (correctPerMinute >= 8) return { emoji: '⭐', message: 'Well done!' }
-  if (correctPerMinute >= 5) return { emoji: '😊', message: 'Good effort!' }
+function getTier(correctCount: number): { emoji: string; message: string } {
+  if (correctCount >= 12) return { emoji: '🌟', message: 'Amazing!' }
+  if (correctCount >= 8) return { emoji: '⭐', message: 'Well done!' }
+  if (correctCount >= 5) return { emoji: '😊', message: 'Good effort!' }
   return { emoji: '💪', message: 'Keep practicing!' }
 }
 
-export function ResultsScreen({ correctCount, incorrectCount, gameDurationSeconds, onPlayAgain }: ResultsScreenProps) {
-  const { emoji, message } = getTier(correctCount, gameDurationSeconds)
+export function ResultsScreen({
+  correctCount,
+  incorrectCount,
+  isNewHighScore,
+  rank,
+  onPlayAgain,
+}: ResultsScreenProps) {
+  const { emoji, message } = getTier(correctCount)
 
   return (
     <div className={styles.container}>
       <div className={styles.tierEmoji}>{emoji}</div>
       <h2 className={styles.message}>{message}</h2>
+      {isNewHighScore && (
+        <p className={styles.highScoreBadge}>🏆 New high score!{rank ? ` #${rank}` : ''}</p>
+      )}
 
       <div className={styles.scores}>
         <div className={styles.scoreItem}>
