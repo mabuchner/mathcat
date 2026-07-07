@@ -28,7 +28,7 @@ npm run preview
 
 `npm run preview` serves the production build (with the real generated service worker) the same way `dev:host` does, and is the most accurate way to test installability and offline behavior before deploying anywhere.
 
-**Deployment is intentionally not set up yet** — where to host this (GitHub Pages, Vercel, Netlify, etc.) is still an open decision. Once picked, the production build in `dist/` is a static site that can be deployed as-is.
+Every push to `main` is automatically built and deployed to GitHub Pages via `.github/workflows/deploy.yml`. The live app is at [mabuchner.github.io/mathcat](https://mabuchner.github.io/mathcat/).
 
 ## Testing
 
