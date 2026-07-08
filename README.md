@@ -28,7 +28,11 @@ npm run preview
 
 `npm run preview` serves the production build (with the real generated service worker) the same way `dev:host` does, and is the most accurate way to test installability and offline behavior before deploying anywhere.
 
-Every push to `main` is automatically built and deployed to GitHub Pages via `.github/workflows/deploy.yml`. The live app is at [mabuchner.github.io/mathcat](https://mabuchner.github.io/mathcat/).
+Every push to `main` is automatically built and deployed to GitHub Pages via `.github/workflows/deploy.yml`, which publishes `dist/` to the root of the `gh-pages` branch (GitHub Pages must be configured to serve from that branch). The live app is at [mabuchner.github.io/mathcat](https://mabuchner.github.io/mathcat/).
+
+### Pull request previews
+
+`.github/workflows/pr-preview.yml` builds every pull request and deploys it to `mabuchner.github.io/mathcat/pr-<number>/` (a `pr-<number>/` folder on the `gh-pages` branch), posting the link as a PR comment. The preview is rebuilt on every push and deleted when the PR is closed. For security, previews are only built for branches in this repository — pull requests from forks get regular CI but no preview, because building untrusted code with a write-capable token could alter the deployed site.
 
 ## Testing
 

@@ -1,0 +1,116 @@
+name: PR Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+
+permissions: {}
+
+# Shared with the deploy workflow so pushes to gh-pages are serialized.
+concurrency:
+  group: gh-pages
+  cancel-in-progress: false
+
+jobs:
+  # Previews are built only for branches in this repository, never for forks:
+  # building fork code with a write-capable token would let a malicious PR
+  # alter the deployed site.
+  deploy:
+    if: github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+        env:
+          MATHCAT_BASE: /mathcat/pr-${{ github.event.number }}/
+
+      - name: Publish preview to gh-pages branch
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git fetch origin gh-pages:gh-pages; then
+            git branch gh-pages "$(git commit-tree "$(git hash-object -t tree /dev/null)" -m 'Initialize gh-pages')"
+          fi
+          SITE="$RUNNER_TEMP/gh-pages"
+          git worktree add "$SITE" gh-pages
+          rm -rf "$SITE/pr-$PR_NUMBER"
+          mkdir -p "$SITE/pr-$PR_NUMBER"
+          cp -r dist/. "$SITE/pr-$PR_NUMBER/"
+          touch "$SITE/.nojekyll"
+          cd "$SITE"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to deploy"
+            exit 0
+          fi
+          git commit -m "Deploy preview for PR #$PR_NUMBER ($GITHUB_SHA)"
+          for i in 1 2 3; do
+            git push origin gh-pages && break
+            git fetch origin gh-pages && git rebase origin/gh-pages
+          done
+
+      - name: Comment preview link on the PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const marker = '<!-- mathcat-pr-preview -->'
+            const url = `https://${context.repo.owner}.github.io/${context.repo.repo}/pr-${context.issue.number}/`
+            const sha = context.payload.pull_request.head.sha
+            const body = `${marker}\n🐱 **PR preview:** ${url}\n\nBuilt from ${sha}. The preview is updated on every push and removed when the PR is closed. It may take a minute to go live after this comment appears.`
+            const { data: comments } = await github.rest.issues.listComments({
+              ...context.repo,
+              issue_number: context.issue.number,
+            })
+            const existing = comments.find(c => c.body.includes(marker))
+            if (existing) {
+              await github.rest.issues.updateComment({ ...context.repo, comment_id: existing.id, body })
+            } else {
+              await github.rest.issues.createComment({ ...context.repo, issue_number: context.issue.number, body })
+            }
+
+  cleanup:
+    if: github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Remove preview from gh-pages branch
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git fetch origin gh-pages:gh-pages; then
+            echo "No gh-pages branch; nothing to clean up"
+            exit 0
+          fi
+          SITE="$RUNNER_TEMP/gh-pages"
+          git worktree add "$SITE" gh-pages
+          cd "$SITE"
+          if [ ! -d "pr-$PR_NUMBER" ]; then
+            echo "No preview directory to remove"
+            exit 0
+          fi
+          git rm -r -q "pr-$PR_NUMBER"
+          git commit -m "Remove preview for PR #$PR_NUMBER"
+          for i in 1 2 3; do
+            git push origin gh-pages && break
+            git fetch origin gh-pages && git rebase origin/gh-pages
+          done
