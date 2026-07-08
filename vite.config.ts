@@ -4,9 +4,12 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import basicSsl from '@vitejs/plugin-basic-ssl'
 
+// Overridden by CI for PR preview deployments (e.g. /mathcat/pr-123/).
+const base = process.env.MATHCAT_BASE ?? '/mathcat/'
+
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/mathcat/',
+  base,
   plugins: [
     react(),
     basicSsl(),
@@ -22,8 +25,8 @@ export default defineConfig({
         background_color: '#6d28d9',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/mathcat/',
-        scope: '/mathcat/',
+        start_url: base,
+        scope: base,
         icons: [
           { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
           { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
@@ -31,6 +34,10 @@ export default defineConfig({
         ],
       },
       workbox: {
+        // The production service worker's scope (/mathcat/) also covers the
+        // PR preview subfolders; without this, its navigation fallback would
+        // serve the production index.html for preview URLs.
+        navigateFallbackDenylist: [/\/pr-\d+\//],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/cataas\.com\/.*/,

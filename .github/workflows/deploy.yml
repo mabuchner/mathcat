@@ -5,20 +5,16 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
+# Shared with the PR preview workflow so pushes to gh-pages are serialized.
 concurrency:
-  group: pages
+  group: gh-pages
   cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -31,11 +27,28 @@ jobs:
 
       - run: npm run build
 
-      - uses: actions/configure-pages@v5
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Publish to gh-pages branch root
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git fetch origin gh-pages:gh-pages; then
+            git branch gh-pages "$(git commit-tree "$(git hash-object -t tree /dev/null)" -m 'Initialize gh-pages')"
+          fi
+          SITE="$RUNNER_TEMP/gh-pages"
+          git worktree add "$SITE" gh-pages
+          cd "$SITE"
+          # Replace the production site at the root, but keep PR previews.
+          find . -maxdepth 1 ! -name . ! -name .git ! -name 'pr-*' -exec rm -rf {} +
+          cp -r "$GITHUB_WORKSPACE/dist/." .
+          touch .nojekyll
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to deploy"
+            exit 0
+          fi
+          git commit -m "Deploy $GITHUB_SHA"
+          for i in 1 2 3; do
+            git push origin gh-pages && break
+            git fetch origin gh-pages && git rebase origin/gh-pages
+          done
