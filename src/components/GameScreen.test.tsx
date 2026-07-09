@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { DEFAULT_SETTINGS } from '../settings/types'
@@ -67,6 +67,16 @@ describe('GameScreen', () => {
 
     await typeDigits(user, wrongDigitsSameLength(correct))
 
-    expect(await screen.findByText(new RegExp(`${a} × ${b} = ${correct}`))).toBeInTheDocument()
+    expect(
+      await screen.findByText(
+        (_, element) => element?.tagName === 'P' && element.textContent === `${a} × ${b} = ${correct}`,
+      ),
+    ).toBeInTheDocument()
+
+    expect(screen.getByRole('button', { name: /next/i })).toBeDisabled()
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(3200)
+    })
+    await waitFor(() => expect(screen.getByRole('button', { name: /next/i })).toBeEnabled())
   })
 })
