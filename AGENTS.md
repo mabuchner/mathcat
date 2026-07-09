@@ -29,3 +29,8 @@ npm run test    # Vitest test suite
 - Do not mention how many tests were added or coverage changes unless testing was the explicit goal
 - Do not include URLs unless they are a directly relevant reference for the change
 - No attribution footers, sign-offs, or AI tool mentions
+
+## Pull request descriptions
+
+- Do not include any AI agent attribution, such as "Generated with Claude Code"
+- Do not mention or link to any AI session URLs
