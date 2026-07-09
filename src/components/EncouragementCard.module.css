@@ -2,19 +2,21 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  padding: 24px 16px;
+  gap: 28px;
+  padding: 32px 16px;
   text-align: center;
 }
 
 .emoji {
   font-size: 3rem;
+  animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
 }
 
 .message {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--color-warm);
+  animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s backwards;
 }
 
 .answerReveal {
@@ -24,6 +26,20 @@
   background: var(--color-warm-bg);
   padding: 10px 20px;
   border-radius: 16px;
+  animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s backwards;
+}
+
+.answerValue {
+  display: inline-block;
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 1.2s backwards;
+}
+
+@keyframes pop {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
 }
 
 .continueButton {
@@ -36,6 +52,13 @@
   padding: 14px 32px;
   box-shadow: 0 4px 0 var(--color-primary-dark);
   cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.continueButton:disabled {
+  background: color-mix(in srgb, var(--color-primary) 35%, var(--color-bg));
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--color-primary-dark) 35%, var(--color-bg));
+  cursor: default;
 }
 
 .continueButton:active {
