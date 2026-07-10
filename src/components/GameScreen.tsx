@@ -84,7 +84,11 @@ export function GameScreen({ settings, recordScore, onHome }: GameScreenProps) {
         )}
         {state.phase === 'correct' && <CatReward catUrl={preloadedCatUrl} onContinue={continueGame} />}
         {state.phase === 'feedback' && (
-          <EncouragementCard problem={state.problem} onContinue={continueGame} />
+          <EncouragementCard
+            problem={state.problem}
+            submittedAnswer={state.submittedAnswer}
+            onContinue={continueGame}
+          />
         )}
         {state.phase === 'results' && (
           <ResultsScreen

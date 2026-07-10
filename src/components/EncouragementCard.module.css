@@ -9,14 +9,31 @@
 
 .emoji {
   font-size: 3rem;
+  /* Pull the headline up close: emoji and headline read as one unit, which
+     frees vertical room for the answer reveal below. */
+  margin-bottom: -14px;
+  animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+.headline {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--color-warm);
   animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
 }
 
 .message {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--color-warm);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-text-soft);
   animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s backwards;
+}
+
+.yourAnswer {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text-soft);
+  animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s backwards;
 }
 
 .answerReveal {
@@ -26,7 +43,8 @@
   background: var(--color-warm-bg);
   padding: 10px 20px;
   border-radius: 16px;
-  animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s backwards;
+  margin: 22px 0;
+  animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 1.2s backwards;
 }
 
 .answerValue {
@@ -34,7 +52,7 @@
   font-size: 1.9rem;
   font-weight: 800;
   color: var(--color-primary);
-  animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 1.2s backwards;
+  animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 1.6s backwards;
 }
 
 @keyframes pop {
