@@ -4,6 +4,8 @@
 
 MathCat is a mental-arithmetic practice game for primary school students. The goal is to build **automaticity** — making basic operations on small numbers reflexive so they no longer consume conscious mental effort. Enjoyment is essential: it's what keeps kids returning long enough for that fluency to form.
 
+Feedback always uses **positive reinforcement, never negative**: correct answers earn rewards, and mistakes get gentle encouragement plus the correct answer. Do not add punishing feedback of any kind — no harsh error sounds, shaming messages, "wrong!" shakes, lost rewards, or anything that makes a mistake feel like failure.
+
 ## Project structure
 
 See [README.md](README.md) for the full project structure, architecture overview, and how to run the app locally and on a phone.
