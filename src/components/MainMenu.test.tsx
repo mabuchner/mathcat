@@ -9,6 +9,13 @@ describe('MainMenu', () => {
     expect(screen.getByRole('heading', { name: 'MathCat' })).toBeInTheDocument()
   })
 
+  it('shows the build date and commit hash', () => {
+    render(<MainMenu onPlay={() => {}} onSettings={() => {}} onHighScores={() => {}} />)
+    expect(
+      screen.getByText(/^Build: \d{4}-\d{2}-\d{2} \d{2}:\d{2} UTC · \w+$/),
+    ).toBeInTheDocument()
+  })
+
   it.each([
     [/play/i, 'onPlay'],
     [/high scores/i, 'onHighScores'],
