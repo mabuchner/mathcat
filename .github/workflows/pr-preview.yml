@@ -34,6 +34,7 @@ jobs:
       - run: npm run build
         env:
           MATHCAT_BASE: /mathcat/pr-${{ github.event.number }}/
+          MATHCAT_COMMIT: ${{ github.event.pull_request.head.sha }}
 
       - name: Publish preview to gh-pages branch
         env:

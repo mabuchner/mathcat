@@ -1,4 +1,5 @@
 /// <reference types="vitest/config" />
+import { execSync } from 'node:child_process'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
@@ -7,9 +8,25 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 // Overridden by CI for PR preview deployments (e.g. /mathcat/pr-123/).
 const base = process.env.MATHCAT_BASE ?? '/mathcat/'
 
+function getCommitHash(): string {
+  // CI sets this for PR previews, where the checkout is GitHub's synthetic
+  // merge commit whose hash matches nothing visible in the PR.
+  const fromEnv = process.env.MATHCAT_COMMIT
+  if (fromEnv) return fromEnv.slice(0, 7)
+  try {
+    return execSync('git rev-parse --short=7 HEAD', { encoding: 'utf8' }).trim()
+  } catch {
+    return 'unknown'
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig({
   base,
+  define: {
+    __BUILD_DATE__: JSON.stringify(new Date().toISOString()),
+    __COMMIT_HASH__: JSON.stringify(getCommitHash()),
+  },
   plugins: [
     react(),
     basicSsl(),

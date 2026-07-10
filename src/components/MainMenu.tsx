@@ -25,6 +25,10 @@ export function MainMenu({ onPlay, onSettings, onHighScores }: MainMenuProps) {
         </button>
 
       </div>
+
+      <p className={styles.buildInfo}>
+        Build: {__BUILD_DATE__.slice(0, 16).replace('T', ' ')} UTC · {__COMMIT_HASH__}
+      </p>
     </div>
   )
 }
