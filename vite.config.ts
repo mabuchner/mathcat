@@ -56,5 +56,11 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     globals: true,
+    coverage: {
+      // Count all source files, not just the ones tests happen to load.
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/**/*.test.*', 'src/test/**', 'src/main.tsx'],
+      reporter: ['text', 'lcov'],
+    },
   },
 })
