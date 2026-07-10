@@ -6,10 +6,11 @@ import styles from './EncouragementCard.module.css'
 
 export interface EncouragementCardProps {
   problem: Problem
+  submittedAnswer?: number
   onContinue: () => void
 }
 
-export function EncouragementCard({ problem, onContinue }: EncouragementCardProps) {
+export function EncouragementCard({ problem, submittedAnswer, onContinue }: EncouragementCardProps) {
   const lastMessageRef = useRef<string | undefined>(undefined)
   const message = useMemo(() => {
     const picked = pickEncouragement(lastMessageRef.current)
@@ -18,20 +19,24 @@ export function EncouragementCard({ problem, onContinue }: EncouragementCardProp
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [problem])
 
-  // Staged reveal: emoji, message, equation, and answer cascade in 0.4s steps
-  // (see the CSS animation delays), and Next stays disabled until 2s after the
-  // answer appears so it registers.
+  // Staged reveal: headline, message, the child's answer, equation, and the
+  // correct answer cascade in 0.4s steps (see the CSS animation delays), and
+  // Next stays disabled until 2s after the answer appears so it registers.
   const [canContinue, setCanContinue] = useState(false)
   useEffect(() => {
     setCanContinue(false)
-    const timer = setTimeout(() => setCanContinue(true), 3200)
+    const timer = setTimeout(() => setCanContinue(true), 3600)
     return () => clearTimeout(timer)
   }, [problem])
 
   return (
     <div className={styles.card}>
-      <p className={styles.emoji}>🙂</p>
+      <p className={styles.emoji}>🤔</p>
+      <p className={styles.headline}>Oops!</p>
       <p className={styles.message}>{message}</p>
+      {submittedAnswer !== undefined && (
+        <p className={styles.yourAnswer}>You answered {submittedAnswer}</p>
+      )}
       <p className={styles.answerReveal}>
         {problem.a} {OPERATION_SYMBOL[problem.operation]} {problem.b} ={' '}
         <strong className={styles.answerValue}>{problem.answer}</strong>

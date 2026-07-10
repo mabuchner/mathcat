@@ -17,6 +17,8 @@ export interface GameState {
   problemId: number
   correctCount: number
   incorrectCount: number
+  /** The child's wrong answer, present only during the feedback phase. */
+  submittedAnswer?: number
 }
 
 export type GameAction =

@@ -65,17 +65,20 @@ describe('GameScreen', () => {
     const [a, b] = problemText.split('×').map((part) => Number(part.trim()))
     const correct = a * b
 
-    await typeDigits(user, wrongDigitsSameLength(correct))
+    const wrongAnswer = wrongDigitsSameLength(correct)
+    await typeDigits(user, wrongAnswer)
 
     expect(
       await screen.findByText(
         (_, element) => element?.tagName === 'P' && element.textContent === `${a} × ${b} = ${correct}`,
       ),
     ).toBeInTheDocument()
+    expect(screen.getByText('Oops!')).toBeInTheDocument()
+    expect(screen.getByText(`You answered ${Number(wrongAnswer)}`)).toBeInTheDocument()
 
     expect(screen.getByRole('button', { name: /next/i })).toBeDisabled()
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(3200)
+      await vi.advanceTimersByTimeAsync(3600)
     })
     await waitFor(() => expect(screen.getByRole('button', { name: /next/i })).toBeEnabled())
   })

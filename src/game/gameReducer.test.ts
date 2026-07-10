@@ -31,6 +31,14 @@ describe('gameReducer', () => {
     expect(state.correctCount).toBe(0)
   })
 
+  it('remembers the wrong answer and clears it on CONTINUE', () => {
+    const nextProblem: Problem = { a: 3, b: 4, operation: 'multiplication', answer: 12 }
+    const afterWrong = gameReducer(initial(), { type: 'SUBMIT_ANSWER', problemId: 0, value: 55 })
+    expect(afterWrong.submittedAnswer).toBe(55)
+    const afterContinue = gameReducer(afterWrong, { type: 'CONTINUE', problem: nextProblem })
+    expect(afterContinue.submittedAnswer).toBeUndefined()
+  })
+
   it('ignores SUBMIT_ANSWER for a stale problemId', () => {
     const state = gameReducer(initial(), { type: 'SUBMIT_ANSWER', problemId: 99, value: 56 })
     expect(state.phase).toBe('question')
