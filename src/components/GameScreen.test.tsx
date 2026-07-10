@@ -82,4 +82,15 @@ describe('GameScreen', () => {
     })
     await waitFor(() => expect(screen.getByRole('button', { name: /next/i })).toBeEnabled())
   })
+
+  it('shows the results screen when the global timer runs out', async () => {
+    render(<GameScreen settings={settings} recordScore={recordScore} onHome={() => {}} />)
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(61_000)
+    })
+
+    expect(screen.getByRole('button', { name: /play again/i })).toBeInTheDocument()
+    expect(screen.getByText('Keep practicing!')).toBeInTheDocument()
+  })
 })
