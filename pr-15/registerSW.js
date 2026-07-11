@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/mathcat/pr-15/sw.js', { scope: '/mathcat/pr-15/' })})}
