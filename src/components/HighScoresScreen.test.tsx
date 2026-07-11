@@ -5,8 +5,8 @@ import type { HighScoreEntry } from '../scores/types'
 import { HighScoresScreen } from './HighScoresScreen'
 
 const entries: HighScoreEntry[] = [
-  { correctCount: 9, incorrectCount: 1, operations: ['multiplication'], tables: [7], dateISO: '2026-07-01T10:00:00.000Z' },
-  { correctCount: 6, incorrectCount: 2, operations: ['addition', 'subtraction'], tables: [3], dateISO: '2026-07-02T10:00:00.000Z' },
+  { correctCount: 9, incorrectCount: 1, operations: ['multiplication'], tables: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], dateISO: '2026-07-01T10:00:00.000Z' },
+  { correctCount: 6, incorrectCount: 2, operations: ['addition', 'subtraction'], tables: [3, 5, 6, 7], dateISO: '2026-07-02T10:00:00.000Z' },
 ]
 
 afterEach(() => {
@@ -20,12 +20,13 @@ describe('HighScoresScreen', () => {
     expect(screen.queryByRole('button', { name: /reset/i })).not.toBeInTheDocument()
   })
 
-  it('lists one row per score with counts and operation symbols', () => {
+  it('lists one row per score with counts, operations, and practiced numbers', () => {
     render(<HighScoresScreen highScores={entries} onReset={() => {}} onClose={() => {}} />)
     expect(screen.getAllByRole('listitem')).toHaveLength(2)
     expect(screen.getByText('✓ 9')).toBeInTheDocument()
     expect(screen.getByText('✗ 2')).toBeInTheDocument()
-    expect(screen.getByText('+ −')).toBeInTheDocument()
+    expect(screen.getByText('× · 1–10')).toBeInTheDocument()
+    expect(screen.getByText('+ − · 3, 5–7')).toBeInTheDocument()
   })
 
   it('resets only after the confirmation is accepted', async () => {
