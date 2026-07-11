@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#6d28d9"/>
+  <g fill="#fbbf24">
+    <polygon points="140,190 200,90 230,210"/>
+    <polygon points="372,190 312,90 282,210"/>
+  </g>
+  <circle cx="256" cy="270" r="150" fill="#fbbf24"/>
+  <circle cx="205" cy="255" r="18" fill="#1f2937"/>
+  <circle cx="307" cy="255" r="18" fill="#1f2937"/>
+  <polygon points="256,290 236,320 276,320" fill="#f97316"/>
+  <path d="M256 320 Q256 336 236 340" stroke="#1f2937" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M256 320 Q256 336 276 340" stroke="#1f2937" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <g stroke="#1f2937" stroke-width="6" stroke-linecap="round">
+    <line x1="110" y1="270" x2="190" y2="278"/>
+    <line x1="110" y1="295" x2="190" y2="295"/>
+    <line x1="322" y1="278" x2="402" y2="270"/>
+    <line x1="322" y1="295" x2="402" y2="295"/>
+  </g>
+  <text x="256" y="470" font-family="Arial, sans-serif" font-size="72" font-weight="700" fill="#fbbf24" text-anchor="middle">7&#215;8</text>
+</svg>
