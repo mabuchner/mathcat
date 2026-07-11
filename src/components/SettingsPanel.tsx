@@ -1,5 +1,6 @@
+import { useState } from 'react'
 import type { Operation } from '../game/types'
-import type { Settings } from '../settings/types'
+import { MIN_TABLES, type Settings } from '../settings/types'
 import styles from './SettingsPanel.module.css'
 
 export interface SettingsPanelProps {
@@ -16,23 +17,43 @@ const ALL_OPERATIONS: { value: Operation; label: string }[] = [
   { value: 'multiplication', label: '× Multiply' },
 ]
 
+interface Hints {
+  operations?: string
+  tables?: string
+}
+
 export function SettingsPanel({ settings, onChange, onClose }: SettingsPanelProps) {
+  // Chips toggle freely; the minimums are only validated when leaving via Done,
+  // so rearranging a selection mid-edit never fights back.
+  const [hints, setHints] = useState<Hints>({})
+
   function toggleTable(table: number) {
     const isSelected = settings.tables.includes(table)
-    if (isSelected && settings.tables.length === 1) return
     const nextTables = isSelected
       ? settings.tables.filter((selected) => selected !== table)
       : [...settings.tables, table].sort((a, b) => a - b)
+    if (nextTables.length >= MIN_TABLES) setHints((previous) => ({ ...previous, tables: undefined }))
     onChange({ tables: nextTables })
   }
 
   function toggleOperation(op: Operation) {
     const isSelected = settings.operations.includes(op)
-    if (isSelected && settings.operations.length === 1) return
     const next = isSelected
       ? settings.operations.filter((o) => o !== op)
       : [...settings.operations, op]
+    if (next.length > 0) setHints((previous) => ({ ...previous, operations: undefined }))
     onChange({ operations: next })
+  }
+
+  function handleDone() {
+    const nextHints: Hints = {}
+    if (settings.operations.length === 0) nextHints.operations = 'Pick at least one operation'
+    if (settings.tables.length < MIN_TABLES) nextHints.tables = `Pick at least ${MIN_TABLES} numbers`
+    if (nextHints.operations || nextHints.tables) {
+      setHints(nextHints)
+      return
+    }
+    onClose()
   }
 
   return (
@@ -54,10 +75,17 @@ export function SettingsPanel({ settings, onChange, onClose }: SettingsPanelProp
             </button>
           ))}
         </div>
+        {hints.operations && (
+          <p className={styles.hint} role="status">
+            {hints.operations}
+          </p>
+        )}
       </section>
 
       <section>
-        <h3>Numbers to practice</h3>
+        <h3>
+          Numbers to practice <span className={styles.headingNote}>(pick {MIN_TABLES} or more)</span>
+        </h3>
         <div className={styles.chipGrid}>
           {ALL_TABLES.map((table) => (
             <button
@@ -71,6 +99,11 @@ export function SettingsPanel({ settings, onChange, onClose }: SettingsPanelProp
             </button>
           ))}
         </div>
+        {hints.tables && (
+          <p className={styles.hint} role="status">
+            {hints.tables}
+          </p>
+        )}
       </section>
 
       <section className={styles.toggleRow}>
@@ -84,7 +117,7 @@ export function SettingsPanel({ settings, onChange, onClose }: SettingsPanelProp
         </label>
       </section>
 
-      <button type="button" className={styles.doneButton} onClick={onClose}>
+      <button type="button" className={styles.doneButton} onClick={handleDone}>
         Done
       </button>
     </div>

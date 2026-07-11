@@ -33,9 +33,21 @@ describe('useSettings', () => {
   })
 
   it('loads persisted settings on a fresh mount', () => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...DEFAULT_SETTINGS, tables: [2, 4] }))
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...DEFAULT_SETTINGS, tables: [2, 4, 6, 8] }))
     const { result } = renderHook(() => useSettings())
-    expect(result.current.settings.tables).toEqual([2, 4])
+    expect(result.current.settings.tables).toEqual([2, 4, 6, 8])
+  })
+
+  it('resets persisted tables below the minimum back to the defaults', () => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...DEFAULT_SETTINGS, tables: [5] }))
+    const { result } = renderHook(() => useSettings())
+    expect(result.current.settings.tables).toEqual(DEFAULT_SETTINGS.tables)
+  })
+
+  it('resets persisted empty operations back to the defaults', () => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...DEFAULT_SETTINGS, operations: [] }))
+    const { result } = renderHook(() => useSettings())
+    expect(result.current.settings.operations).toEqual(DEFAULT_SETTINGS.operations)
   })
 
   it('falls back to defaults without throwing when storage contains corrupt JSON', () => {
