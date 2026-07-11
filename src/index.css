@@ -30,6 +30,13 @@ body {
 
 body {
   overscroll-behavior: none;
+  /* Native-app feel on touch screens: no double-tap zoom or 300ms tap delay,
+     no long-press callouts or accidental text selection, no grey tap flash. */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 #root {
