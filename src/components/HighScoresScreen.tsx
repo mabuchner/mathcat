@@ -18,6 +18,24 @@ function formatOperations(operations: Operation[]): string {
   return operations.map((operation) => OPERATION_SYMBOLS[operation]).join(' ')
 }
 
+/** Compact display of the practiced numbers: [1,2,3,4,7] → "1–4, 7". */
+function formatTables(tables: number[]): string {
+  const sorted = [...tables].sort((a, b) => a - b)
+  const parts: string[] = []
+  let start = sorted[0]
+  let end = sorted[0]
+  for (const value of sorted.slice(1)) {
+    if (value === end + 1) {
+      end = value
+      continue
+    }
+    parts.push(start === end ? `${start}` : `${start}–${end}`)
+    start = end = value
+  }
+  parts.push(start === end ? `${start}` : `${start}–${end}`)
+  return parts.join(', ')
+}
+
 function formatDate(dateISO: string): string {
   return new Date(dateISO).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 }
@@ -34,11 +52,15 @@ export function HighScoresScreen({ highScores, onReset, onClose }: HighScoresScr
           {highScores.map((entry, index) => (
             <li key={entry.dateISO} className={styles.row}>
               <span className={styles.rank}>{index + 1}</span>
-              <span className={styles.counts}>
-                <span className={styles.correct}>✓ {entry.correctCount}</span>
-                <span className={styles.incorrect}>✗ {entry.incorrectCount}</span>
+              <span className={styles.details}>
+                <span className={styles.counts}>
+                  <span className={styles.correct}>✓ {entry.correctCount}</span>
+                  <span className={styles.incorrect}>✗ {entry.incorrectCount}</span>
+                </span>
+                <span className={styles.config}>
+                  {`${formatOperations(entry.operations)} · ${formatTables(entry.tables)}`}
+                </span>
               </span>
-              <span className={styles.operations}>{formatOperations(entry.operations)}</span>
               <span className={styles.date}>{formatDate(entry.dateISO)}</span>
             </li>
           ))}
