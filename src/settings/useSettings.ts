@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { DEFAULT_SETTINGS, type Settings } from './types'
+import { DEFAULT_SETTINGS, MIN_TABLES, type Settings } from './types'
 
 const STORAGE_KEY = 'mathcat:settings:v1'
 
@@ -8,7 +8,15 @@ function loadSettings(): Settings {
     const raw = window.localStorage.getItem(STORAGE_KEY)
     if (!raw) return DEFAULT_SETTINGS
     const parsed = JSON.parse(raw)
-    return { ...DEFAULT_SETTINGS, ...parsed }
+    const settings: Settings = { ...DEFAULT_SETTINGS, ...parsed }
+    // Settings persisted before the minimum was introduced may violate it.
+    if (!Array.isArray(settings.tables) || settings.tables.length < MIN_TABLES) {
+      settings.tables = DEFAULT_SETTINGS.tables
+    }
+    if (!Array.isArray(settings.operations) || settings.operations.length === 0) {
+      settings.operations = DEFAULT_SETTINGS.operations
+    }
+    return settings
   } catch {
     return DEFAULT_SETTINGS
   }
