@@ -32,3 +32,16 @@
 .backspace {
   color: var(--color-warm);
 }
+
+@media (orientation: landscape) and (max-height: 560px) {
+  .keypad {
+    gap: 8px;
+  }
+
+  .key {
+    aspect-ratio: auto;
+    height: 52px;
+    font-size: 1.4rem;
+    border-radius: 14px;
+  }
+}

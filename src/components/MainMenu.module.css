@@ -72,3 +72,38 @@
   color: var(--color-text-soft);
   opacity: 0.7;
 }
+
+@media (orientation: landscape) and (max-height: 560px) {
+  .menu {
+    gap: 10px;
+    padding: 16px 24px;
+  }
+
+  .logo {
+    font-size: 2.4rem;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .subtitle {
+    margin-top: -8px;
+    font-size: 0.95rem;
+  }
+
+  .buttons {
+    flex-direction: row;
+    max-width: 640px;
+    margin-top: 4px;
+  }
+
+  .btn {
+    font-size: 1.05rem;
+    padding: 14px 0;
+  }
+
+  .buildInfo {
+    margin-top: 6px;
+  }
+}
