@@ -45,25 +45,29 @@ export function ProblemCard({ problem, globalRemainingMs, globalDurationMs, onSu
 
   return (
     <div className={styles.card}>
-      <div className={styles.header}>
-        <CountdownRing
-          remainingMs={globalRemainingMs}
-          durationMs={globalDurationMs}
-          label={formatMinSec(globalRemainingMs)}
-          size={96}
-        />
+      <div className={styles.info}>
+        <div className={styles.header}>
+          <CountdownRing
+            remainingMs={globalRemainingMs}
+            durationMs={globalDurationMs}
+            label={formatMinSec(globalRemainingMs)}
+            size={96}
+          />
+        </div>
+        <p className={styles.problem}>
+          {problem.a} {OPERATION_SYMBOL[problem.operation]} {problem.b}
+        </p>
+        <div className={styles.answer} aria-live="polite">
+          {digitSlots.map((digit, index) => (
+            <span key={index} className={`${styles.digitBox} ${digit ? styles.digitBoxFilled : ''}`}>
+              {digit}
+            </span>
+          ))}
+        </div>
       </div>
-      <p className={styles.problem}>
-        {problem.a} {OPERATION_SYMBOL[problem.operation]} {problem.b}
-      </p>
-      <div className={styles.answer} aria-live="polite">
-        {digitSlots.map((digit, index) => (
-          <span key={index} className={`${styles.digitBox} ${digit ? styles.digitBoxFilled : ''}`}>
-            {digit}
-          </span>
-        ))}
+      <div className={styles.keypadColumn}>
+        <Keypad onDigit={appendDigit} onBackspace={backspace} disabled={pendingSubmit} />
       </div>
-      <Keypad onDigit={appendDigit} onBackspace={backspace} disabled={pendingSubmit} />
     </div>
   )
 }
