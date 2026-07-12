@@ -29,6 +29,20 @@ describe('ResultsScreen', () => {
     expect(screen.getByText('🏆 New high score! #2')).toBeInTheDocument()
   })
 
+  it('shows confetti on a new high score', () => {
+    const { container } = render(
+      <ResultsScreen correctCount={9} incorrectCount={0} isNewHighScore rank={2} onPlayAgain={() => {}} />,
+    )
+    expect(container.querySelector('[aria-hidden="true"]')).toBeInTheDocument()
+  })
+
+  it('omits confetti by default', () => {
+    const { container } = render(
+      <ResultsScreen correctCount={9} incorrectCount={0} onPlayAgain={() => {}} />,
+    )
+    expect(container.querySelector('[aria-hidden="true"]')).not.toBeInTheDocument()
+  })
+
   it('shows the high score badge without a rank', () => {
     render(
       <ResultsScreen correctCount={9} incorrectCount={0} isNewHighScore rank={null} onPlayAgain={() => {}} />,

@@ -1,3 +1,4 @@
+import { Confetti } from './Confetti'
 import styles from './ResultsScreen.module.css'
 
 export interface ResultsScreenProps {
@@ -29,7 +30,10 @@ export function ResultsScreen({
       <div className={styles.tierEmoji}>{emoji}</div>
       <h2 className={styles.message}>{message}</h2>
       {isNewHighScore && (
-        <p className={styles.highScoreBadge}>🏆 New high score!{rank ? ` #${rank}` : ''}</p>
+        <>
+          <Confetti />
+          <p className={styles.highScoreBadge}>🏆 New high score!{rank ? ` #${rank}` : ''}</p>
+        </>
       )}
 
       <div className={styles.scores}>
