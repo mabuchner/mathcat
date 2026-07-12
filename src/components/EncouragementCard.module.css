@@ -73,7 +73,7 @@
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.continueButton:disabled {
+.continueButtonWaiting {
   background: color-mix(in srgb, var(--color-primary) 35%, var(--color-bg));
   box-shadow: 0 4px 0 color-mix(in srgb, var(--color-primary-dark) 35%, var(--color-bg));
   cursor: default;
@@ -82,6 +82,14 @@
 .continueButton:active {
   transform: translateY(4px);
   box-shadow: none;
+}
+
+.waitHint {
+  min-height: 1.2em;
+  margin-top: -16px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-soft);
 }
 
 @media (orientation: landscape) and (max-height: 560px) {

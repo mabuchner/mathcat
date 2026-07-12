@@ -23,11 +23,21 @@ export function EncouragementCard({ problem, submittedAnswer, onContinue }: Enco
   // correct answer cascade in 0.4s steps (see the CSS animation delays), and
   // Next stays disabled until 2s after the answer appears so it registers.
   const [canContinue, setCanContinue] = useState(false)
+  const [showWaitHint, setShowWaitHint] = useState(false)
   useEffect(() => {
     setCanContinue(false)
+    setShowWaitHint(false)
     const timer = setTimeout(() => setCanContinue(true), 3600)
     return () => clearTimeout(timer)
   }, [problem])
+
+  const handleContinueClick = () => {
+    if (!canContinue) {
+      setShowWaitHint(true)
+      return
+    }
+    onContinue()
+  }
 
   return (
     <div className={styles.card}>
@@ -41,9 +51,17 @@ export function EncouragementCard({ problem, submittedAnswer, onContinue }: Enco
         {problem.a} {OPERATION_SYMBOL[problem.operation]} {problem.b} ={' '}
         <strong className={styles.answerValue}>{problem.answer}</strong>
       </p>
-      <button type="button" className={styles.continueButton} disabled={!canContinue} onClick={onContinue}>
+      <button
+        type="button"
+        className={`${styles.continueButton} ${!canContinue ? styles.continueButtonWaiting : ''}`}
+        aria-disabled={!canContinue}
+        onClick={handleContinueClick}
+      >
         Next →
       </button>
+      <p className={styles.waitHint} aria-live="polite">
+        {showWaitHint && !canContinue ? 'Try to remember the correct result!' : ''}
+      </p>
     </div>
   )
 }
