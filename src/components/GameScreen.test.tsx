@@ -76,11 +76,16 @@ describe('GameScreen', () => {
     expect(screen.getByText('Oops!')).toBeInTheDocument()
     expect(screen.getByText(`You answered ${Number(wrongAnswer)}`)).toBeInTheDocument()
 
-    expect(screen.getByRole('button', { name: /next/i })).toBeDisabled()
+    const nextButton = screen.getByRole('button', { name: /next/i })
+    expect(nextButton).toHaveAttribute('aria-disabled', 'true')
+    await user.click(nextButton)
+    expect(screen.getByText('Try to remember the correct result!')).toBeInTheDocument()
+
     await act(async () => {
       await vi.advanceTimersByTimeAsync(3600)
     })
-    await waitFor(() => expect(screen.getByRole('button', { name: /next/i })).toBeEnabled())
+    await waitFor(() => expect(nextButton).toHaveAttribute('aria-disabled', 'false'))
+    expect(screen.queryByText('Try to remember the correct result!')).not.toBeInTheDocument()
   })
 
   it('shows the results screen when the global timer runs out', async () => {
