@@ -5,6 +5,8 @@
 
 A friendly mental-arithmetic practice game covering addition, subtraction, and multiplication. Answer a problem before the countdown runs out to win a random cat picture; a wrong answer or a timeout gets a gentle encouraging message instead. Built as an installable Progressive Web App so it works the same way on Android (Chrome) and iOS (Safari, "Add to Home Screen") without any app store.
 
+**▶ Play it now: [mabuchner.github.io/mathcat](https://mabuchner.github.io/mathcat/)**
+
 ## Running it locally
 
 ```bash
@@ -31,7 +33,7 @@ npm run preview
 
 `npm run preview` serves the production build (with the real generated service worker) the same way `dev:host` does, and is the most accurate way to test installability and offline behavior before deploying anywhere.
 
-Every push to `main` is automatically built and deployed to GitHub Pages via `.github/workflows/deploy.yml`, which publishes `dist/` to the root of the `gh-pages` branch (GitHub Pages must be configured to serve from that branch). The live app is at [mabuchner.github.io/mathcat](https://mabuchner.github.io/mathcat/).
+Every push to `main` is automatically built and deployed to GitHub Pages via `.github/workflows/deploy.yml`, which publishes `dist/` to the root of the `gh-pages` branch (GitHub Pages must be configured to serve from that branch).
 
 ### Pull request previews
 
