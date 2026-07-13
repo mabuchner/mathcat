@@ -36,3 +36,7 @@ npm run test    # Vitest test suite
 
 - Do not include any AI agent attribution, such as "Generated with Claude Code"
 - Do not mention or link to any AI session URLs
+
+## After creating a pull request
+
+- Report the preview link to the user: `https://mabuchner.github.io/mathcat/pr-<number>/` (see README.md for how PR previews are built).
