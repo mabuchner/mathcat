@@ -66,6 +66,29 @@
   box-shadow: 0 5px 0 #ddd6fe;
 }
 
+.shareLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: var(--color-ring-track);
+  color: var(--color-text-soft);
+  margin-top: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.shareLinkText {
+  text-decoration: underline;
+}
+
+.shareLink:active {
+  opacity: 0.6;
+}
+
 .buildInfo {
   margin-top: 16px;
   font-size: 0.7rem;
@@ -101,6 +124,11 @@
   .btn {
     font-size: 1.05rem;
     padding: 14px 0;
+  }
+
+  .shareLink {
+    margin-top: 4px;
+    font-size: 0.85rem;
   }
 
   .buildInfo {
