@@ -9,6 +9,8 @@
 
 .panel h2 {
   font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
   text-align: center;
 }
 
