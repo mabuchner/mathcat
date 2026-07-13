@@ -3,12 +3,14 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { DEFAULT_SETTINGS } from '../settings/types'
 import { GameScreen } from './GameScreen'
+import { playTick } from '../sound/sounds'
 
 vi.mock('../sound/sounds', () => ({
   playCorrect: vi.fn(),
   playTryAgain: vi.fn(),
   playVictory: vi.fn(),
   playGameOver: vi.fn(),
+  playTick: vi.fn(),
 }))
 
 vi.mock('../cats/catImage', () => ({
@@ -39,6 +41,7 @@ function wrongDigitsSameLength(correct: number): string {
 describe('GameScreen', () => {
   beforeEach(() => {
     vi.useFakeTimers({ shouldAdvanceTime: true })
+    vi.mocked(playTick).mockClear()
   })
 
   afterEach(() => {
@@ -97,5 +100,38 @@ describe('GameScreen', () => {
 
     expect(screen.getByRole('button', { name: /play again/i })).toBeInTheDocument()
     expect(screen.getByText('Keep practicing!')).toBeInTheDocument()
+  })
+
+  it('only plays the tick sound during the final 10 seconds of the countdown', async () => {
+    render(<GameScreen settings={settings} recordScore={recordScore} onHome={() => {}} />)
+
+    // 60s total; advancing 49s leaves 11s remaining, just outside the tick window.
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(49_000)
+    })
+    expect(playTick).not.toHaveBeenCalled()
+
+    // Crossing into the final 10 seconds should start ticking, but at most roughly
+    // once per second rather than on every 100ms timer update.
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2_000)
+    })
+    expect(playTick).toHaveBeenCalled()
+    expect(vi.mocked(playTick).mock.calls.length).toBeLessThanOrEqual(3)
+  })
+
+  it('never plays the tick sound when sound is disabled', async () => {
+    render(
+      <GameScreen
+        settings={{ ...settings, soundEnabled: false }}
+        recordScore={recordScore}
+        onHome={() => {}}
+      />,
+    )
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(55_000)
+    })
+    expect(playTick).not.toHaveBeenCalled()
   })
 })
