@@ -10,6 +10,15 @@ export interface CatRewardProps {
 export function CatReward({ catUrl, onContinue }: CatRewardProps) {
   const [imageErrored, setImageErrored] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
+  const [loadedForUrl, setLoadedForUrl] = useState(catUrl)
+
+  // Reset load/error state whenever the image changes, so a stale flag from a
+  // previous cat can't stick to the new one.
+  if (catUrl !== loadedForUrl) {
+    setImageErrored(false)
+    setImageLoaded(false)
+    setLoadedForUrl(catUrl)
+  }
 
   const src = imageErrored ? fallbackCat : catUrl
 
