@@ -22,7 +22,7 @@ export function useGame(settings: Settings): UseGameResult {
     settings,
     (initialSettings) =>
       createInitialGameState(
-        generateProblem({ tables: initialSettings.tables, operations: initialSettings.operations }),
+        generateProblem({ numbers: initialSettings.numbers, operations: initialSettings.operations }),
       ),
   )
   const problemRef = useRef(state.problem)
@@ -59,14 +59,14 @@ export function useGame(settings: Settings): UseGameResult {
     const problem =
       dueMiss?.problem ??
       generateProblem({
-        tables: settings.tables,
+        numbers: settings.numbers,
         operations: settings.operations,
         previous: problemRef.current,
       })
     missedQueueRef.current = dueMiss?.queue ?? dueQueue
 
     dispatch({ type: 'CONTINUE', problem })
-  }, [settings.tables, settings.operations])
+  }, [settings.numbers, settings.operations])
 
   return { state, globalRemainingMs, globalDurationMs, submitAnswer, continueGame }
 }

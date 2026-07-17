@@ -14,13 +14,9 @@ const OPERATION_SYMBOLS: Record<Operation, string> = {
   multiplication: '×',
 }
 
-function formatOperations(operations: Operation[]): string {
-  return operations.map((operation) => OPERATION_SYMBOLS[operation]).join(' ')
-}
-
 /** Compact display of the practiced numbers: [1,2,3,4,7] → "1–4, 7". */
-function formatTables(tables: number[]): string {
-  const sorted = [...tables].sort((a, b) => a - b)
+function formatNumbers(numbers: number[]): string {
+  const sorted = [...numbers].sort((a, b) => a - b)
   const parts: string[] = []
   let start = sorted[0]
   let end = sorted[0]
@@ -34,6 +30,19 @@ function formatTables(tables: number[]): string {
   }
   parts.push(start === end ? `${start}` : `${start}–${end}`)
   return parts.join(', ')
+}
+
+/**
+ * Each operation gets its own symbol and number range, since they can now differ: "× 1–10 · + 3–7".
+ * Falls back to just the symbol for scores recorded before per-operation ranges existed.
+ */
+function formatEntryConfig(entry: HighScoreEntry): string {
+  return entry.operations
+    .map((operation) => {
+      const numbers = entry.numbers?.[operation]
+      return numbers && numbers.length > 0 ? `${OPERATION_SYMBOLS[operation]} ${formatNumbers(numbers)}` : OPERATION_SYMBOLS[operation]
+    })
+    .join(' · ')
 }
 
 function formatDate(dateISO: string): string {
@@ -57,9 +66,7 @@ export function HighScoresScreen({ highScores, onReset, onClose }: HighScoresScr
                   <span className={styles.correct}>✓ {entry.correctCount}</span>
                   <span className={styles.incorrect}>✗ {entry.incorrectCount}</span>
                 </span>
-                <span className={styles.config}>
-                  {`${formatOperations(entry.operations)} · ${formatTables(entry.tables)}`}
-                </span>
+                <span className={styles.config}>{formatEntryConfig(entry)}</span>
               </span>
               <span className={styles.date}>{formatDate(entry.dateISO)}</span>
             </li>

@@ -46,10 +46,10 @@ export function GameScreen({ settings, recordScore, onHome }: GameScreenProps) {
         correctCount: state.correctCount,
         incorrectCount: state.incorrectCount,
         operations: settings.operations,
-        tables: settings.tables,
+        numbers: Object.fromEntries(settings.operations.map((operation) => [operation, settings.numbers[operation]])),
       }),
     )
-  }, [state.phase, state.correctCount, state.incorrectCount, settings.operations, settings.tables, recordScore])
+  }, [state.phase, state.correctCount, state.incorrectCount, settings.operations, settings.numbers, recordScore])
 
   useEffect(() => {
     if (!settings.soundEnabled || state.phase !== 'question') return

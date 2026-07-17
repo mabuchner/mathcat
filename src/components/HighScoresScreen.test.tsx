@@ -5,8 +5,20 @@ import type { HighScoreEntry } from '../scores/types'
 import { HighScoresScreen } from './HighScoresScreen'
 
 const entries: HighScoreEntry[] = [
-  { correctCount: 9, incorrectCount: 1, operations: ['multiplication'], tables: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], dateISO: '2026-07-01T10:00:00.000Z' },
-  { correctCount: 6, incorrectCount: 2, operations: ['addition', 'subtraction'], tables: [3, 5, 6, 7], dateISO: '2026-07-02T10:00:00.000Z' },
+  {
+    correctCount: 9,
+    incorrectCount: 1,
+    operations: ['multiplication'],
+    numbers: { multiplication: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
+    dateISO: '2026-07-01T10:00:00.000Z',
+  },
+  {
+    correctCount: 6,
+    incorrectCount: 2,
+    operations: ['addition', 'subtraction'],
+    numbers: { addition: [3, 5, 6, 7], subtraction: [1, 2, 3] },
+    dateISO: '2026-07-02T10:00:00.000Z',
+  },
 ]
 
 afterEach(() => {
@@ -25,8 +37,21 @@ describe('HighScoresScreen', () => {
     expect(screen.getAllByRole('listitem')).toHaveLength(2)
     expect(screen.getByText('✓ 9')).toBeInTheDocument()
     expect(screen.getByText('✗ 2')).toBeInTheDocument()
-    expect(screen.getByText('× · 1–10')).toBeInTheDocument()
-    expect(screen.getByText('+ − · 3, 5–7')).toBeInTheDocument()
+    expect(screen.getByText('× 1–10')).toBeInTheDocument()
+    expect(screen.getByText('+ 3, 5–7 · − 1–3')).toBeInTheDocument()
+  })
+
+  it('falls back to just the symbol for a legacy entry recorded before per-operation ranges existed', () => {
+    // Simulates a score recorded by an older version of the app, before the `numbers` field existed.
+    const legacyEntry = {
+      correctCount: 4,
+      incorrectCount: 0,
+      operations: ['multiplication'],
+      dateISO: '2026-06-01T10:00:00.000Z',
+    } as unknown as HighScoreEntry
+
+    render(<HighScoresScreen highScores={[legacyEntry]} onReset={() => {}} onClose={() => {}} />)
+    expect(screen.getByText('×')).toBeInTheDocument()
   })
 
   it('resets only after the confirmation is accepted', async () => {
