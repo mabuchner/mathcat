@@ -17,7 +17,7 @@ vi.mock('../cats/catImage', () => ({
   buildRandomCatUrl: () => 'https://cataas.com/cat?test',
 }))
 
-const settings = { ...DEFAULT_SETTINGS, tables: [7] }
+const settings = { ...DEFAULT_SETTINGS, numbers: { ...DEFAULT_SETTINGS.numbers, multiplication: [7] } }
 const recordScore = () => ({ isNewHighScore: false, rank: null })
 
 function getProblemText() {

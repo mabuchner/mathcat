@@ -10,7 +10,7 @@ function makeEntry(correctCount: number, incorrectCount = 0) {
     correctCount,
     incorrectCount,
     operations: ['multiplication'] as Operation[],
-    tables: [7],
+    numbers: { multiplication: [7] },
   }
 }
 

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { Operation } from '../game/types'
-import { MIN_TABLES, type Settings } from '../settings/types'
+import { MIN_NUMBERS_BY_OPERATION, type Settings } from '../settings/types'
 import styles from './SettingsPanel.module.css'
 
 export interface SettingsPanelProps {
@@ -9,17 +9,17 @@ export interface SettingsPanelProps {
   onClose: () => void
 }
 
-const ALL_TABLES = Array.from({ length: 12 }, (_, index) => index + 1)
+const ALL_NUMBERS = Array.from({ length: 12 }, (_, index) => index + 1)
 
-const ALL_OPERATIONS: { value: Operation; label: string }[] = [
-  { value: 'addition',       label: '+ Add' },
-  { value: 'subtraction',    label: '− Subtract' },
-  { value: 'multiplication', label: '× Multiply' },
+const ALL_OPERATIONS: { value: Operation; label: string; numbersLabel: string }[] = [
+  { value: 'addition',       label: '+ Add',      numbersLabel: 'Numbers to add' },
+  { value: 'subtraction',    label: '− Subtract',  numbersLabel: 'Numbers to subtract' },
+  { value: 'multiplication', label: '× Multiply',  numbersLabel: 'Multiplication tables' },
 ]
 
 interface Hints {
   operations?: string
-  tables?: string
+  numbers?: Partial<Record<Operation, string>>
 }
 
 export function SettingsPanel({ settings, onChange, onClose }: SettingsPanelProps) {
@@ -27,13 +27,14 @@ export function SettingsPanel({ settings, onChange, onClose }: SettingsPanelProp
   // so rearranging a selection mid-edit never fights back.
   const [hints, setHints] = useState<Hints>({})
 
-  function toggleTable(table: number) {
-    const isSelected = settings.tables.includes(table)
-    const nextTables = isSelected
-      ? settings.tables.filter((selected) => selected !== table)
-      : [...settings.tables, table].sort((a, b) => a - b)
-    if (nextTables.length >= MIN_TABLES) setHints((previous) => ({ ...previous, tables: undefined }))
-    onChange({ tables: nextTables })
+  function toggleNumber(operation: Operation, value: number) {
+    const pool = settings.numbers[operation]
+    const isSelected = pool.includes(value)
+    const next = isSelected ? pool.filter((selected) => selected !== value) : [...pool, value].sort((a, b) => a - b)
+    if (next.length >= MIN_NUMBERS_BY_OPERATION[operation]) {
+      setHints((previous) => ({ ...previous, numbers: { ...previous.numbers, [operation]: undefined } }))
+    }
+    onChange({ numbers: { ...settings.numbers, [operation]: next } })
   }
 
   function toggleOperation(op: Operation) {
@@ -48,8 +49,15 @@ export function SettingsPanel({ settings, onChange, onClose }: SettingsPanelProp
   function handleDone() {
     const nextHints: Hints = {}
     if (settings.operations.length === 0) nextHints.operations = 'Pick at least one operation'
-    if (settings.tables.length < MIN_TABLES) nextHints.tables = `Pick at least ${MIN_TABLES} numbers`
-    if (nextHints.operations || nextHints.tables) {
+    const numberHints: Partial<Record<Operation, string>> = {}
+    for (const operation of settings.operations) {
+      const min = MIN_NUMBERS_BY_OPERATION[operation]
+      if (settings.numbers[operation].length < min) {
+        numberHints[operation] = `Pick at least ${min} number${min === 1 ? '' : 's'}`
+      }
+    }
+    if (Object.keys(numberHints).length > 0) nextHints.numbers = numberHints
+    if (nextHints.operations || nextHints.numbers) {
       setHints(nextHints)
       return
     }
@@ -82,29 +90,32 @@ export function SettingsPanel({ settings, onChange, onClose }: SettingsPanelProp
         )}
       </section>
 
-      <section>
-        <h3>
-          Numbers to practice <span className={styles.headingNote}>(pick {MIN_TABLES} or more)</span>
-        </h3>
-        <div className={styles.chipGrid}>
-          {ALL_TABLES.map((table) => (
-            <button
-              key={table}
-              type="button"
-              className={`${styles.chip} ${settings.tables.includes(table) ? styles.chipSelected : ''}`}
-              onClick={() => toggleTable(table)}
-              aria-pressed={settings.tables.includes(table)}
-            >
-              {table}
-            </button>
-          ))}
-        </div>
-        {hints.tables && (
-          <p className={styles.hint} role="status">
-            {hints.tables}
-          </p>
-        )}
-      </section>
+      {ALL_OPERATIONS.filter(({ value }) => settings.operations.includes(value)).map(({ value, numbersLabel }) => (
+        <section key={value}>
+          <h3>
+            {numbersLabel}{' '}
+            <span className={styles.headingNote}>(pick {MIN_NUMBERS_BY_OPERATION[value]} or more)</span>
+          </h3>
+          <div className={styles.chipGrid} role="group" aria-label={numbersLabel}>
+            {ALL_NUMBERS.map((number) => (
+              <button
+                key={number}
+                type="button"
+                className={`${styles.chip} ${settings.numbers[value].includes(number) ? styles.chipSelected : ''}`}
+                onClick={() => toggleNumber(value, number)}
+                aria-pressed={settings.numbers[value].includes(number)}
+              >
+                {number}
+              </button>
+            ))}
+          </div>
+          {hints.numbers?.[value] && (
+            <p className={styles.hint} role="status">
+              {hints.numbers[value]}
+            </p>
+          )}
+        </section>
+      ))}
 
       <section className={styles.toggleRow}>
         <label>
