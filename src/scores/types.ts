@@ -4,7 +4,8 @@ export interface HighScoreEntry {
   correctCount: number
   incorrectCount: number
   operations: Operation[]
-  tables: number[]
+  /** The number pool practiced for each of this entry's operations. */
+  numbers: Partial<Record<Operation, number[]>>
   dateISO: string
 }
 
