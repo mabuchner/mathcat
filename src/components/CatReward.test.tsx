@@ -27,4 +27,22 @@ describe('CatReward', () => {
     await user.click(screen.getByRole('button', { name: /next/i }))
     expect(onContinue).toHaveBeenCalledOnce()
   })
+
+  it('resets its loaded/error state if reused for a new catUrl without unmounting', () => {
+    const { rerender } = render(<CatReward catUrl="https://cataas.com/cat?a" onContinue={() => {}} />)
+    fireEvent.error(screen.getByRole('img', { name: /reward cat/i }))
+    expect(screen.getByRole('img', { name: /reward cat/i })).toHaveAttribute(
+      'src',
+      expect.stringMatching(/^data:image\/svg/),
+    )
+
+    rerender(<CatReward catUrl="https://cataas.com/cat?b" onContinue={() => {}} />)
+
+    // Should show the new cat's loading state, not stay stuck on the previous fallback.
+    expect(screen.getByText(/loading cat/i)).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: /reward cat/i })).toHaveAttribute(
+      'src',
+      'https://cataas.com/cat?b',
+    )
+  })
 })
