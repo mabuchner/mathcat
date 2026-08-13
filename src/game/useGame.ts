@@ -1,7 +1,7 @@
 import { useCallback, useReducer, useRef } from 'react'
 import { generateProblem } from './problemGenerator'
 import { advanceMissedProblemQueue, enqueueMissedProblem, takeDueMissedProblem } from './missedProblemQueue'
-import { createInitialGameState, gameReducer } from './gameReducer'
+import { createInitialGameState, gameReducer, isCorrectAnswer } from './gameReducer'
 import { useGlobalTimer } from './useGlobalTimer'
 import { GAME_DURATION_SECONDS } from './types'
 import type { GameState } from './types'
@@ -12,7 +12,7 @@ export interface UseGameResult {
   state: GameState
   globalRemainingMs: number
   globalDurationMs: number
-  submitAnswer: (value: number) => void
+  submitAnswer: (value: number, valueDenominator?: number) => void
   continueGame: () => void
 }
 
@@ -42,11 +42,11 @@ export function useGame(settings: Settings): UseGameResult {
   })
 
   const submitAnswer = useCallback(
-    (value: number) => {
-      if (value !== state.problem.answer) {
+    (value: number, valueDenominator?: number) => {
+      if (!isCorrectAnswer(state.problem, value, valueDenominator)) {
         missedQueueRef.current = enqueueMissedProblem(missedQueueRef.current, state.problem)
       }
-      dispatch({ type: 'SUBMIT_ANSWER', problemId: state.problemId, value })
+      dispatch({ type: 'SUBMIT_ANSWER', problemId: state.problemId, value, valueDenominator })
     },
     [state.problem, state.problemId],
   )

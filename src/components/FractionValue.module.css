@@ -1,0 +1,19 @@
+.fraction {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  line-height: 1.2;
+}
+
+.numerator,
+.denominator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.08em 0.3em;
+}
+
+.denominator {
+  border-top: 0.09em solid currentColor;
+}

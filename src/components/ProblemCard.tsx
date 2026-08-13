@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { Problem } from '../game/types'
 import { OPERATION_SYMBOL } from '../game/operationSymbol'
 import { CountdownRing } from './CountdownRing'
+import { FractionValue } from './FractionValue'
 import { Keypad } from './Keypad'
 import styles from './ProblemCard.module.css'
 
@@ -9,7 +10,7 @@ export interface ProblemCardProps {
   problem: Problem
   globalRemainingMs: number
   globalDurationMs: number
-  onSubmit: (value: number) => void
+  onSubmit: (value: number, valueDenominator?: number) => void
 }
 
 const SUBMIT_DELAY_MS = 400
@@ -24,7 +25,13 @@ function formatMinSec(ms: number): string {
 export function ProblemCard({ problem, globalRemainingMs, globalDurationMs, onSubmit }: ProblemCardProps) {
   const [input, setInput] = useState('')
   const [pendingSubmit, setPendingSubmit] = useState(false)
-  const expectedLength = String(problem.answer).length
+
+  const isFraction = problem.denominator !== undefined || problem.answerDenominator !== undefined
+  // The typed digits fill the answer's numerator first, then — only for simplification,
+  // where the denominator isn't shown pre-filled — its denominator.
+  const numeratorLength = String(problem.answer).length
+  const denominatorLength = problem.answerDenominator === undefined ? 0 : String(problem.answerDenominator).length
+  const expectedLength = numeratorLength + denominatorLength
 
   function appendDigit(digit: number) {
     if (input.length >= expectedLength || pendingSubmit) return
@@ -32,7 +39,11 @@ export function ProblemCard({ problem, globalRemainingMs, globalDurationMs, onSu
     setInput(next)
     if (next.length === expectedLength) {
       setPendingSubmit(true)
-      setTimeout(() => onSubmit(Number(next)), SUBMIT_DELAY_MS)
+      const value = Number(next.slice(0, numeratorLength))
+      setTimeout(() => {
+        if (denominatorLength > 0) onSubmit(value, Number(next.slice(numeratorLength)))
+        else onSubmit(value)
+      }, SUBMIT_DELAY_MS)
     }
   }
 
@@ -41,7 +52,15 @@ export function ProblemCard({ problem, globalRemainingMs, globalDurationMs, onSu
     setInput((prev) => prev.slice(0, -1))
   }
 
-  const digitSlots = Array.from({ length: expectedLength }, (_, index) => input[index] ?? '')
+  const slotsFor = (offset: number, length: number) =>
+    Array.from({ length }, (_, index) => input[offset + index] ?? '')
+
+  const renderSlots = (slots: string[]) =>
+    slots.map((digit, index) => (
+      <span key={index} className={`${styles.digitBox} ${digit ? styles.digitBoxFilled : ''}`}>
+        {digit}
+      </span>
+    ))
 
   return (
     <div className={styles.card}>
@@ -54,15 +73,39 @@ export function ProblemCard({ problem, globalRemainingMs, globalDurationMs, onSu
             size={96}
           />
         </div>
-        <p className={styles.problem}>
-          {problem.a} {OPERATION_SYMBOL[problem.operation]} {problem.b}
-        </p>
-        <div className={styles.answer} aria-live="polite">
-          {digitSlots.map((digit, index) => (
-            <span key={index} className={`${styles.digitBox} ${digit ? styles.digitBoxFilled : ''}`}>
-              {digit}
-            </span>
-          ))}
+        {problem.operation === 'fractionSimplification' ? (
+          <>
+            <p className={styles.simplifyHint}>Simplify!</p>
+            <p className={`${styles.problem} ${styles.fractionProblem}`}>
+              <FractionValue numerator={problem.a} denominator={problem.b} />
+            </p>
+          </>
+        ) : isFraction ? (
+          <p className={`${styles.problem} ${styles.fractionProblem}`}>
+            <FractionValue numerator={problem.a} denominator={problem.denominator} />
+            <span>{OPERATION_SYMBOL[problem.operation]}</span>
+            <FractionValue numerator={problem.b} denominator={problem.denominator} />
+          </p>
+        ) : (
+          <p className={styles.problem}>
+            {problem.a} {OPERATION_SYMBOL[problem.operation]} {problem.b}
+          </p>
+        )}
+        <div className={`${styles.answer} ${isFraction ? styles.fractionAnswer : ''}`} aria-live="polite">
+          {isFraction ? (
+            <FractionValue
+              numerator={<span className={styles.slotRow}>{renderSlots(slotsFor(0, numeratorLength))}</span>}
+              denominator={
+                denominatorLength > 0 ? (
+                  <span className={styles.slotRow}>{renderSlots(slotsFor(numeratorLength, denominatorLength))}</span>
+                ) : (
+                  <span className={styles.fixedDenominator}>{problem.denominator}</span>
+                )
+              }
+            />
+          ) : (
+            renderSlots(slotsFor(0, numeratorLength))
+          )}
         </div>
       </div>
       <div className={styles.keypadColumn}>

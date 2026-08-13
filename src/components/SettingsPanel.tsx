@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { Operation } from '../game/types'
-import { MIN_NUMBERS_BY_OPERATION, type Settings } from '../settings/types'
+import { MIN_NUMBERS_BY_OPERATION, SELECTABLE_NUMBERS_BY_OPERATION, type Settings } from '../settings/types'
 import styles from './SettingsPanel.module.css'
 
 export interface SettingsPanelProps {
@@ -9,12 +9,13 @@ export interface SettingsPanelProps {
   onClose: () => void
 }
 
-const ALL_NUMBERS = Array.from({ length: 12 }, (_, index) => index + 1)
-
 const ALL_OPERATIONS: { value: Operation; label: string; numbersLabel: string }[] = [
-  { value: 'addition',       label: '+ Add',      numbersLabel: 'Numbers to add' },
-  { value: 'subtraction',    label: '− Subtract',  numbersLabel: 'Numbers to subtract' },
-  { value: 'multiplication', label: '× Multiply',  numbersLabel: 'Multiplication tables' },
+  { value: 'addition',               label: '+ Add',       numbersLabel: 'Numbers to add' },
+  { value: 'subtraction',            label: '− Subtract',  numbersLabel: 'Numbers to subtract' },
+  { value: 'multiplication',         label: '× Multiply',  numbersLabel: 'Multiplication tables' },
+  { value: 'fractionAddition',       label: '+ Fractions', numbersLabel: 'Denominators to add' },
+  { value: 'fractionSubtraction',    label: '− Fractions', numbersLabel: 'Denominators to subtract' },
+  { value: 'fractionSimplification', label: '½ Simplify',  numbersLabel: 'Denominators to simplify' },
 ]
 
 interface Hints {
@@ -97,7 +98,7 @@ export function SettingsPanel({ settings, onChange, onClose }: SettingsPanelProp
             <span className={styles.headingNote}>(pick {MIN_NUMBERS_BY_OPERATION[value]} or more)</span>
           </h3>
           <div className={styles.chipGrid} role="group" aria-label={numbersLabel}>
-            {ALL_NUMBERS.map((number) => (
+            {SELECTABLE_NUMBERS_BY_OPERATION[value].map((number) => (
               <button
                 key={number}
                 type="button"

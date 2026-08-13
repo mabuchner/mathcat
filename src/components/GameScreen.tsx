@@ -87,6 +87,7 @@ export function GameScreen({ settings, recordScore, onHome }: GameScreenProps) {
           <EncouragementCard
             problem={state.problem}
             submittedAnswer={state.submittedAnswer}
+            submittedDenominator={state.submittedDenominator}
             onContinue={continueGame}
           />
         )}

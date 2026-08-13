@@ -12,6 +12,9 @@ const OPERATION_SYMBOLS: Record<Operation, string> = {
   addition: '+',
   subtraction: '−',
   multiplication: '×',
+  fractionAddition: '½+',
+  fractionSubtraction: '½−',
+  fractionSimplification: '½',
 }
 
 /** Compact display of the practiced numbers: [1,2,3,4,7] → "1–4, 7". */
