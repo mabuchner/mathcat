@@ -52,6 +52,21 @@
   text-align: center;
 }
 
+/* Stacked fractions are twice as tall as plain numbers, so scale the row down. */
+.fractionProblem {
+  font-size: 1.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.simplifyHint {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+
 .answer {
   display: flex;
   gap: 10px;
@@ -76,4 +91,27 @@
 
 .digitBoxFilled {
   border-color: var(--color-primary);
+}
+
+/* Fraction answers stack two rows around the bar, so use slightly smaller boxes. */
+.fractionAnswer {
+  font-size: 1.6rem;
+  color: var(--color-primary-dark);
+  font-weight: 700;
+}
+
+.fractionAnswer .digitBox {
+  width: 42px;
+  height: 48px;
+  font-size: 1.5rem;
+}
+
+.slotRow {
+  display: flex;
+  gap: 8px;
+  padding: 4px 2px;
+}
+
+.fixedDenominator {
+  padding: 2px 0;
 }

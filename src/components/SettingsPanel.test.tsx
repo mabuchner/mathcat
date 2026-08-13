@@ -6,7 +6,14 @@ import { SettingsPanel } from './SettingsPanel'
 
 const settings: Settings = {
   operations: ['multiplication'],
-  numbers: { addition: [1, 2, 3, 4], subtraction: [1, 2, 3, 4], multiplication: [2, 3, 5, 7] },
+  numbers: {
+    addition: [1, 2, 3, 4],
+    subtraction: [1, 2, 3, 4],
+    multiplication: [2, 3, 5, 7],
+    fractionAddition: [4, 5, 6],
+    fractionSubtraction: [4, 5, 6],
+    fractionSimplification: [6, 8],
+  },
   soundEnabled: true,
 }
 
@@ -110,6 +117,30 @@ describe('SettingsPanel', () => {
     expect(screen.getByText('Pick at least 3 numbers')).toBeInTheDocument()
     await user.click(additionGroup().getByRole('button', { name: '9' }))
     expect(screen.queryByText('Pick at least 3 numbers')).not.toBeInTheDocument()
+  })
+
+  it('offers the fraction operations and adds one when clicked', async () => {
+    const user = userEvent.setup()
+    const { onChange } = renderPanel()
+    await user.click(screen.getByRole('button', { name: '½ Simplify' }))
+    expect(onChange).toHaveBeenCalledWith({ operations: ['multiplication', 'fractionSimplification'] })
+  })
+
+  it('only offers denominators that can actually be simplified for the simplify operation', () => {
+    renderPanel({ operations: ['fractionSimplification'] })
+    const group = within(screen.getByRole('group', { name: 'Denominators to simplify' }))
+    expect(group.getByRole('button', { name: '6' })).toBeInTheDocument()
+    // Prime denominators have nothing to simplify, so they are not selectable.
+    expect(group.queryByRole('button', { name: '5' })).not.toBeInTheDocument()
+    expect(group.queryByRole('button', { name: '7' })).not.toBeInTheDocument()
+  })
+
+  it('offers denominators from 4 for fraction addition', () => {
+    renderPanel({ operations: ['fractionAddition'] })
+    const group = within(screen.getByRole('group', { name: 'Denominators to add' }))
+    expect(group.getByRole('button', { name: '4' })).toBeInTheDocument()
+    expect(group.getByRole('button', { name: '12' })).toBeInTheDocument()
+    expect(group.queryByRole('button', { name: '3' })).not.toBeInTheDocument()
   })
 
   it('toggles sound effects via the checkbox', async () => {

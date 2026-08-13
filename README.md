@@ -3,7 +3,7 @@
 [![CI](https://github.com/mabuchner/mathcat/actions/workflows/ci.yml/badge.svg)](https://github.com/mabuchner/mathcat/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/mabuchner/mathcat/branch/main/graph/badge.svg)](https://codecov.io/gh/mabuchner/mathcat)
 
-A friendly mental-arithmetic practice game covering addition, subtraction, and multiplication. Answer a problem before the countdown runs out to win a random cat picture; a wrong answer or a timeout gets a gentle encouraging message instead. Built as an installable Progressive Web App so it works the same way on Android (Chrome) and iOS (Safari, "Add to Home Screen") without any app store.
+A friendly mental-arithmetic practice game covering addition, subtraction, multiplication, and fractions (adding and subtracting with like denominators, plus simplifying). Answer a problem before the countdown runs out to win a random cat picture; a wrong answer or a timeout gets a gentle encouraging message instead. Built as an installable Progressive Web App so it works the same way on Android (Chrome) and iOS (Safari, "Add to Home Screen") without any app store.
 
 **▶ Play it now: [mabuchner.github.io/mathcat](https://mabuchner.github.io/mathcat/)**
 

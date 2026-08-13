@@ -41,6 +41,19 @@ describe('HighScoresScreen', () => {
     expect(screen.getByText('+ 3, 5–7 · − 1–3')).toBeInTheDocument()
   })
 
+  it('labels fraction operations with their own symbols', () => {
+    const fractionEntry: HighScoreEntry = {
+      correctCount: 5,
+      incorrectCount: 1,
+      operations: ['fractionAddition', 'fractionSimplification'],
+      numbers: { fractionAddition: [4, 5, 6, 7, 8, 9, 10], fractionSimplification: [6, 8] },
+      dateISO: '2026-07-03T10:00:00.000Z',
+    }
+
+    render(<HighScoresScreen highScores={[fractionEntry]} onReset={() => {}} onClose={() => {}} />)
+    expect(screen.getByText('½+ 4–10 · ½ 6, 8')).toBeInTheDocument()
+  })
+
   it('falls back to just the symbol for a legacy entry recorded before per-operation ranges existed', () => {
     // Simulates a score recorded by an older version of the app, before the `numbers` field existed.
     const legacyEntry = {

@@ -7,6 +7,9 @@ const numbersFor = (pool: number[]): OperationNumbers => ({
   addition: pool,
   subtraction: pool,
   multiplication: pool,
+  fractionAddition: pool,
+  fractionSubtraction: pool,
+  fractionSimplification: pool,
 })
 
 describe('generateProblem', () => {
@@ -40,7 +43,7 @@ describe('generateProblem', () => {
   })
 
   it('draws from each operation\'s own number pool, not a shared one', () => {
-    const numbers: OperationNumbers = { addition: [100, 200], subtraction: [1, 2], multiplication: [9, 9] }
+    const numbers: OperationNumbers = { ...numbersFor([5]), addition: [100, 200], subtraction: [1, 2], multiplication: [9, 9] }
     for (let i = 0; i < 100; i++) {
       const problem = generateProblem({ numbers, operations: ['addition'], random: () => 0 })
       expect(problem).toEqual({ a: 100, b: 100, operation: 'addition', answer: 200 })
@@ -52,7 +55,7 @@ describe('generateProblem', () => {
   })
 
   it('throws if a selected operation has no numbers to draw from', () => {
-    const numbers: OperationNumbers = { addition: [], subtraction: [1, 2, 3], multiplication: [1, 2, 3] }
+    const numbers: OperationNumbers = { ...numbersFor([1, 2, 3]), addition: [] }
     expect(() => generateProblem({ numbers, operations: ['addition'] })).toThrow()
   })
 
@@ -66,6 +69,43 @@ describe('generateProblem', () => {
     const random = () => sequence[i++]
     const problem = generateProblem({ numbers: numbersFor([2, 5]), previous, random })
     expect(problem).toEqual({ a: 2, b: 5, operation: 'multiplication', answer: 10 })
+  })
+
+  it('for fraction addition, keeps the sum a proper fraction over a denominator from the pool', () => {
+    for (let i = 0; i < 300; i++) {
+      const problem = generateProblem({ numbers: numbersFor([5, 8]), operations: ['fractionAddition'] })
+      expect([5, 8]).toContain(problem.denominator)
+      expect(problem.a).toBeGreaterThanOrEqual(1)
+      expect(problem.b).toBeGreaterThanOrEqual(1)
+      expect(problem.a + problem.b).toBeLessThan(problem.denominator!)
+      expect(problem.answer).toBe(problem.a + problem.b)
+      expect(problem.answerDenominator).toBeUndefined()
+    }
+  })
+
+  it('for fraction subtraction, keeps both fractions proper and the difference positive', () => {
+    for (let i = 0; i < 300; i++) {
+      const problem = generateProblem({ numbers: numbersFor([4, 9]), operations: ['fractionSubtraction'] })
+      expect([4, 9]).toContain(problem.denominator)
+      expect(problem.b).toBeGreaterThanOrEqual(1)
+      expect(problem.a).toBeGreaterThan(problem.b)
+      expect(problem.a).toBeLessThan(problem.denominator!)
+      expect(problem.answer).toBe(problem.a - problem.b)
+    }
+  })
+
+  it('for simplification, shows a reducible fraction and expects its fully simplified form', () => {
+    const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b))
+    for (let i = 0; i < 300; i++) {
+      const problem = generateProblem({ numbers: numbersFor([6, 8, 12]), operations: ['fractionSimplification'] })
+      expect([6, 8, 12]).toContain(problem.b)
+      // The shown fraction genuinely simplifies, and the expected answer is that
+      // same value in lowest terms.
+      expect(gcd(problem.a, problem.b)).toBeGreaterThan(1)
+      expect(gcd(problem.answer, problem.answerDenominator!)).toBe(1)
+      expect(problem.answer * problem.b).toBe(problem.a * problem.answerDenominator!)
+      expect(problem.answerDenominator!).toBeLessThan(problem.b)
+    }
   })
 
   it('terminates instead of looping forever if the random source keeps producing the previous problem', () => {

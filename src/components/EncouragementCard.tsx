@@ -2,15 +2,56 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { pickEncouragement } from '../game/messages'
 import type { Problem } from '../game/types'
 import { OPERATION_SYMBOL } from '../game/operationSymbol'
+import { FractionValue } from './FractionValue'
 import styles from './EncouragementCard.module.css'
 
 export interface EncouragementCardProps {
   problem: Problem
   submittedAnswer?: number
+  submittedDenominator?: number
   onContinue: () => void
 }
 
-export function EncouragementCard({ problem, submittedAnswer, onContinue }: EncouragementCardProps) {
+/** The child's answer as they meant it: for fraction problems the typed numerator sits
+ * over the typed denominator (simplification) or the problem's fixed one (add/subtract). */
+function SubmittedAnswer({ problem, value, denominator }: { problem: Problem; value: number; denominator?: number }) {
+  if (problem.answerDenominator !== undefined) return <FractionValue numerator={value} denominator={denominator ?? '?'} />
+  if (problem.denominator !== undefined) return <FractionValue numerator={value} denominator={problem.denominator} />
+  return <>{value}</>
+}
+
+function AnswerReveal({ problem }: { problem: Problem }) {
+  if (problem.operation === 'fractionSimplification') {
+    return (
+      <>
+        <FractionValue numerator={problem.a} denominator={problem.b} /> ={' '}
+        <strong className={styles.answerValue}>
+          <FractionValue numerator={problem.answer} denominator={problem.answerDenominator} />
+        </strong>
+      </>
+    )
+  }
+  if (problem.denominator !== undefined) {
+    return (
+      <>
+        <FractionValue numerator={problem.a} denominator={problem.denominator} />{' '}
+        {OPERATION_SYMBOL[problem.operation]}{' '}
+        <FractionValue numerator={problem.b} denominator={problem.denominator} /> ={' '}
+        <strong className={styles.answerValue}>
+          <FractionValue numerator={problem.answer} denominator={problem.denominator} />
+        </strong>
+      </>
+    )
+  }
+  return (
+    <>
+      {problem.a} {OPERATION_SYMBOL[problem.operation]} {problem.b} ={' '}
+      <strong className={styles.answerValue}>{problem.answer}</strong>
+    </>
+  )
+}
+
+export function EncouragementCard({ problem, submittedAnswer, submittedDenominator, onContinue }: EncouragementCardProps) {
   const lastMessageRef = useRef<string | undefined>(undefined)
   const message = useMemo(() => {
     const picked = pickEncouragement(lastMessageRef.current)
@@ -45,11 +86,12 @@ export function EncouragementCard({ problem, submittedAnswer, onContinue }: Enco
       <p className={styles.headline}>Oops!</p>
       <p className={styles.message}>{message}</p>
       {submittedAnswer !== undefined && (
-        <p className={styles.yourAnswer}>You answered {submittedAnswer}</p>
+        <p className={styles.yourAnswer}>
+          You answered <SubmittedAnswer problem={problem} value={submittedAnswer} denominator={submittedDenominator} />
+        </p>
       )}
       <p className={styles.answerReveal}>
-        {problem.a} {OPERATION_SYMBOL[problem.operation]} {problem.b} ={' '}
-        <strong className={styles.answerValue}>{problem.answer}</strong>
+        <AnswerReveal problem={problem} />
       </p>
       <button
         type="button"

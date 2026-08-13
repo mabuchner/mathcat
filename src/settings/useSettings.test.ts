@@ -67,6 +67,31 @@ describe('useSettings', () => {
     expect(result.current.settings.operations).toEqual(DEFAULT_SETTINGS.operations)
   })
 
+  it('fills in the fraction pools for settings persisted before fractions existed', () => {
+    window.localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        operations: ['addition'],
+        numbers: { addition: [1, 2, 3], subtraction: [1, 2, 3], multiplication: [7] },
+        soundEnabled: true,
+      }),
+    )
+    const { result } = renderHook(() => useSettings())
+    expect(result.current.settings.numbers.fractionAddition).toEqual(DEFAULT_SETTINGS.numbers.fractionAddition)
+    expect(result.current.settings.numbers.fractionSimplification).toEqual(DEFAULT_SETTINGS.numbers.fractionSimplification)
+  })
+
+  it('drops persisted numbers that are no longer selectable, falling back to defaults below the minimum', () => {
+    window.localStorage.setItem(
+      STORAGE_KEY,
+      // Prime denominators can never appear for simplification; only 8 survives the
+      // filter, which is below the two-denominator minimum.
+      JSON.stringify({ ...DEFAULT_SETTINGS, numbers: { ...DEFAULT_SETTINGS.numbers, fractionSimplification: [5, 7, 8] } }),
+    )
+    const { result } = renderHook(() => useSettings())
+    expect(result.current.settings.numbers.fractionSimplification).toEqual(DEFAULT_SETTINGS.numbers.fractionSimplification)
+  })
+
   it('falls back to defaults without throwing when storage contains corrupt JSON', () => {
     window.localStorage.setItem(STORAGE_KEY, '{ not valid json')
     const { result } = renderHook(() => useSettings())

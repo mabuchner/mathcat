@@ -70,6 +70,29 @@ describe('gameReducer', () => {
     expect(afterContinue.incorrectCount).toBe(0)
   })
 
+  it('accepts a simplification answer only when numerator and denominator both match', () => {
+    const simplification: Problem = { a: 6, b: 8, operation: 'fractionSimplification', answer: 3, answerDenominator: 4 }
+    const right = gameReducer(createInitialGameState(simplification), {
+      type: 'SUBMIT_ANSWER', problemId: 0, value: 3, valueDenominator: 4,
+    })
+    expect(right.phase).toBe('correct')
+
+    const wrongDenominator = gameReducer(createInitialGameState(simplification), {
+      type: 'SUBMIT_ANSWER', problemId: 0, value: 3, valueDenominator: 8,
+    })
+    expect(wrongDenominator.phase).toBe('feedback')
+    expect(wrongDenominator.submittedAnswer).toBe(3)
+    expect(wrongDenominator.submittedDenominator).toBe(8)
+  })
+
+  it('accepts a fraction addition answer by its numerator alone, since the denominator is fixed', () => {
+    const fractionAddition: Problem = { a: 2, b: 3, operation: 'fractionAddition', answer: 5, denominator: 9 }
+    const state = gameReducer(createInitialGameState(fractionAddition), {
+      type: 'SUBMIT_ANSWER', problemId: 0, value: 5,
+    })
+    expect(state.phase).toBe('correct')
+  })
+
   it('GAME_OVER moves to results phase', () => {
     const state = gameReducer(initial(), { type: 'GAME_OVER' })
     expect(state.phase).toBe('results')
