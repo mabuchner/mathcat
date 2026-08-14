@@ -25,7 +25,7 @@
   width: 100%;
 }
 
-/* Phone held sideways: countdown/problem/answer on the left, keypad on the right. */
+/* Phone held sideways: problem/answer on the left, keypad on the right. */
 @media (orientation: landscape) and (max-height: 560px) {
   .card {
     flex-direction: row;
@@ -46,17 +46,6 @@
   .keypadColumn {
     width: min(340px, 45vw);
   }
-}
-
-.header {
-  display: flex;
-  justify-content: center;
-}
-
-/* The ring is an SVG with a viewBox, so overriding its size scales it cleanly. */
-.header svg {
-  width: clamp(56px, 11dvh, 96px);
-  height: clamp(56px, 11dvh, 96px);
 }
 
 .problem {

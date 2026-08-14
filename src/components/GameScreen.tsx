@@ -6,10 +6,18 @@ import type { Settings } from '../settings/types'
 import type { RecordScoreResult } from '../scores/useHighScores'
 import type { HighScoreEntry } from '../scores/types'
 import { CatReward } from './CatReward'
+import { CountdownRing } from './CountdownRing'
 import { EncouragementCard } from './EncouragementCard'
 import { ResultsScreen } from './ResultsScreen'
 import styles from './GameScreen.module.css'
 import { ProblemCard } from './ProblemCard'
+
+function formatMinSec(ms: number): string {
+  const totalSeconds = Math.ceil(ms / 1000)
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
+  return `${minutes}:${String(seconds).padStart(2, '0')}`
+}
 
 export interface GameScreenProps {
   settings: Settings
@@ -67,6 +75,12 @@ export function GameScreen({ settings, recordScore, onHome }: GameScreenProps) {
         <button type="button" className={styles.homeButton} onClick={onHome} aria-label="Back to menu">
           🏠
         </button>
+        <CountdownRing
+          remainingMs={globalRemainingMs}
+          durationMs={globalDurationMs}
+          label={formatMinSec(globalRemainingMs)}
+          size={48}
+        />
         <div className={styles.headerStats}>
           <span className={styles.scoreCorrect}>✓ {state.correctCount}</span>
           <span className={styles.scoreIncorrect}>✗ {state.incorrectCount}</span>
@@ -74,13 +88,7 @@ export function GameScreen({ settings, recordScore, onHome }: GameScreenProps) {
       </div>
       <div className={styles.screen}>
         {state.phase === 'question' && (
-          <ProblemCard
-            key={state.problemId}
-            problem={state.problem}
-            globalRemainingMs={globalRemainingMs}
-            globalDurationMs={globalDurationMs}
-            onSubmit={submitAnswer}
-          />
+          <ProblemCard key={state.problemId} problem={state.problem} onSubmit={submitAnswer} />
         )}
         {state.phase === 'correct' && <CatReward catUrl={preloadedCatUrl} onContinue={continueGame} />}
         {state.phase === 'feedback' && (

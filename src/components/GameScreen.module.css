@@ -5,12 +5,22 @@
   width: 100%;
 }
 
+/* Three columns so the countdown sits exactly centered regardless of how wide
+   the home button and the score are. */
 .header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   padding: 8px 12px 0;
   gap: 0.5rem;
+}
+
+.homeButton {
+  justify-self: start;
+}
+
+.headerStats {
+  justify-self: end;
 }
 
 .headerStats {
