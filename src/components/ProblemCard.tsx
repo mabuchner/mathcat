@@ -26,9 +26,8 @@ export function ProblemCard({ problem, globalRemainingMs, globalDurationMs, onSu
   const [input, setInput] = useState('')
   const [pendingSubmit, setPendingSubmit] = useState(false)
 
-  const isFraction = problem.denominator !== undefined || problem.answerDenominator !== undefined
-  // The typed digits fill the answer's numerator first, then — only for simplification,
-  // where the denominator isn't shown pre-filled — its denominator.
+  const isFraction = problem.answerDenominator !== undefined
+  // The typed digits fill the answer's numerator first, then its denominator.
   const numeratorLength = String(problem.answer).length
   const denominatorLength = problem.answerDenominator === undefined ? 0 : String(problem.answerDenominator).length
   const expectedLength = numeratorLength + denominatorLength
@@ -95,13 +94,7 @@ export function ProblemCard({ problem, globalRemainingMs, globalDurationMs, onSu
           {isFraction ? (
             <FractionValue
               numerator={<span className={styles.slotRow}>{renderSlots(slotsFor(0, numeratorLength))}</span>}
-              denominator={
-                denominatorLength > 0 ? (
-                  <span className={styles.slotRow}>{renderSlots(slotsFor(numeratorLength, denominatorLength))}</span>
-                ) : (
-                  <span className={styles.fixedDenominator}>{problem.denominator}</span>
-                )
-              }
+              denominator={<span className={styles.slotRow}>{renderSlots(slotsFor(numeratorLength, denominatorLength))}</span>}
             />
           ) : (
             renderSlots(slotsFor(0, numeratorLength))
