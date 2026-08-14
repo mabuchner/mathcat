@@ -85,12 +85,37 @@ describe('gameReducer', () => {
     expect(wrongDenominator.submittedDenominator).toBe(8)
   })
 
-  it('accepts a fraction addition answer by its numerator alone, since the denominator is fixed', () => {
-    const fractionAddition: Problem = { a: 2, b: 3, operation: 'fractionAddition', answer: 5, denominator: 9 }
-    const state = gameReducer(createInitialGameState(fractionAddition), {
+  it('requires the typed denominator for a fraction addition answer', () => {
+    const fractionAddition: Problem = {
+      a: 2, b: 3, operation: 'fractionAddition', answer: 5, denominator: 9, answerDenominator: 9,
+    }
+    const right = gameReducer(createInitialGameState(fractionAddition), {
+      type: 'SUBMIT_ANSWER', problemId: 0, value: 5, valueDenominator: 9,
+    })
+    expect(right.phase).toBe('correct')
+
+    const missingDenominator = gameReducer(createInitialGameState(fractionAddition), {
       type: 'SUBMIT_ANSWER', problemId: 0, value: 5,
     })
-    expect(state.phase).toBe('correct')
+    expect(missingDenominator.phase).toBe('feedback')
+  })
+
+  it('accepts an equivalent fraction for addition, but not for simplification', () => {
+    // 1/4 + 1/4: the expected 2/4 and the already-simplified 1/2 are both right.
+    const fractionAddition: Problem = {
+      a: 1, b: 1, operation: 'fractionAddition', answer: 2, denominator: 4, answerDenominator: 4,
+    }
+    const simplified = gameReducer(createInitialGameState(fractionAddition), {
+      type: 'SUBMIT_ANSWER', problemId: 0, value: 1, valueDenominator: 2,
+    })
+    expect(simplified.phase).toBe('correct')
+
+    // Simplifying 2/4 demands lowest terms, so answering 2/4 itself is not enough.
+    const simplification: Problem = { a: 2, b: 4, operation: 'fractionSimplification', answer: 1, answerDenominator: 2 }
+    const unsimplified = gameReducer(createInitialGameState(simplification), {
+      type: 'SUBMIT_ANSWER', problemId: 0, value: 2, valueDenominator: 4,
+    })
+    expect(unsimplified.phase).toBe('feedback')
   })
 
   it('GAME_OVER moves to results phase', () => {

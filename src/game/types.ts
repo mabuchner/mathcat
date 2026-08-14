@@ -13,14 +13,12 @@ export interface Problem {
   b: number
   operation: Operation
   answer: number
-  /**
-   * For fraction addition/subtraction: the like denominator shared by `a`, `b`, and the
-   * answer. It is shown pre-filled in the answer, so the child only types the numerator.
-   */
+  /** For fraction addition/subtraction: the like denominator shared by `a` and `b`. */
   denominator?: number
   /**
-   * For simplification: the denominator of the answer in simplest form. When present the
-   * child types it along with the numerator (`answer`); `a`/`b` are the shown fraction.
+   * For fraction problems: the denominator of the expected answer, which the child types
+   * along with the numerator (`answer`). For simplification (where `a`/`b` are the shown
+   * fraction) it is the lowest-terms denominator.
    */
   answerDenominator?: number
 }

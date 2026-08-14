@@ -2,11 +2,18 @@ import type { GameAction, GameState, Problem } from './types'
 
 /**
  * A submission matches when the typed numerator equals the expected answer, and — for
- * problems where the child also types a denominator (simplification) — that matches too.
+ * fraction problems, where the child also types a denominator — that matches too.
+ * Simplification demands the exact lowest-terms form (that is the skill being practiced),
+ * but addition and subtraction accept any fraction of equal value: a child who writes
+ * 1/2 where 2/4 was expected has already simplified, not made a mistake.
  */
 export function isCorrectAnswer(problem: Problem, value: number, valueDenominator?: number): boolean {
-  if (value !== problem.answer) return false
-  return problem.answerDenominator === undefined || valueDenominator === problem.answerDenominator
+  if (problem.answerDenominator === undefined) return value === problem.answer
+  if (valueDenominator === undefined || valueDenominator <= 0) return false
+  if (problem.operation === 'fractionSimplification') {
+    return value === problem.answer && valueDenominator === problem.answerDenominator
+  }
+  return value * problem.answerDenominator === problem.answer * valueDenominator
 }
 
 export function createInitialGameState(problem: GameState['problem']): GameState {

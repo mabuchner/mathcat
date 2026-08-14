@@ -63,14 +63,14 @@ function createProblem(operation: Operation, pool: number[], random: () => numbe
       const denominator = pick(pool)
       const a = 1 + Math.floor(random() * (denominator - 2))
       const b = 1 + Math.floor(random() * (denominator - 1 - a))
-      return { a, b, operation, answer: a + b, denominator }
+      return { a, b, operation, answer: a + b, denominator, answerDenominator: denominator }
     }
     case 'fractionSubtraction': {
       // Both fractions proper and the difference positive: 1 ≤ b < a ≤ denominator − 1.
       const denominator = pick(pool)
       const a = 2 + Math.floor(random() * (denominator - 2))
       const b = 1 + Math.floor(random() * (a - 1))
-      return { a, b, operation, answer: a - b, denominator }
+      return { a, b, operation, answer: a - b, denominator, answerDenominator: denominator }
     }
     case 'fractionSimplification': {
       // The pool holds the denominators of the shown fraction; only reducible

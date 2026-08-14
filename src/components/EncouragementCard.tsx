@@ -12,11 +12,9 @@ export interface EncouragementCardProps {
   onContinue: () => void
 }
 
-/** The child's answer as they meant it: for fraction problems the typed numerator sits
- * over the typed denominator (simplification) or the problem's fixed one (add/subtract). */
+/** The child's answer as they wrote it: the typed numerator over the typed denominator. */
 function SubmittedAnswer({ problem, value, denominator }: { problem: Problem; value: number; denominator?: number }) {
   if (problem.answerDenominator !== undefined) return <FractionValue numerator={value} denominator={denominator ?? '?'} />
-  if (problem.denominator !== undefined) return <FractionValue numerator={value} denominator={problem.denominator} />
   return <>{value}</>
 }
 

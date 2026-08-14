@@ -79,7 +79,7 @@ describe('generateProblem', () => {
       expect(problem.b).toBeGreaterThanOrEqual(1)
       expect(problem.a + problem.b).toBeLessThan(problem.denominator!)
       expect(problem.answer).toBe(problem.a + problem.b)
-      expect(problem.answerDenominator).toBeUndefined()
+      expect(problem.answerDenominator).toBe(problem.denominator)
     }
   })
 
@@ -91,6 +91,7 @@ describe('generateProblem', () => {
       expect(problem.a).toBeGreaterThan(problem.b)
       expect(problem.a).toBeLessThan(problem.denominator!)
       expect(problem.answer).toBe(problem.a - problem.b)
+      expect(problem.answerDenominator).toBe(problem.denominator)
     }
   })
 

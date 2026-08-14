@@ -63,23 +63,27 @@ describe('ProblemCard', () => {
     expect(onSubmit).toHaveBeenCalledTimes(1)
   })
 
-  it('for fraction addition, shows the fixed denominator and submits the typed numerator alone', async () => {
+  it('for fraction addition, shows the operand denominators and submits the typed fraction', async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
     const onSubmit = vi.fn()
-    const fractionProblem: Problem = { a: 2, b: 4, operation: 'fractionAddition', answer: 6, denominator: 7 }
+    const fractionProblem: Problem = {
+      a: 2, b: 4, operation: 'fractionAddition', answer: 6, denominator: 7, answerDenominator: 7,
+    }
     render(
       <ProblemCard problem={fractionProblem} globalRemainingMs={60_000} globalDurationMs={60_000} onSubmit={onSubmit} />,
     )
 
-    // The like denominator appears under both operands and pre-filled under the
-    // answer (the selector excludes the keypad's own 7 button).
-    expect(screen.getAllByText('7', { selector: ':not(button)' })).toHaveLength(3)
+    // The like denominator appears under both operands; the answer's is typed, not
+    // pre-filled (the selector excludes the keypad's own 7 button).
+    expect(screen.getAllByText('7', { selector: ':not(button)' })).toHaveLength(2)
 
     await user.click(screen.getByRole('button', { name: 'Digit 6' }))
+    expect(onSubmit).not.toHaveBeenCalled()
+    await user.click(screen.getByRole('button', { name: 'Digit 7' }))
     await act(async () => {
       await vi.advanceTimersByTimeAsync(400)
     })
-    expect(onSubmit).toHaveBeenCalledWith(6)
+    expect(onSubmit).toHaveBeenCalledWith(6, 7)
   })
 
   it('for simplification, collects numerator then denominator before submitting both', async () => {
