@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
+  gap: clamp(8px, 1.6dvh, 12px);
   width: 100%;
   margin: 0 auto;
 }
@@ -12,10 +13,13 @@
   background: var(--color-surface);
   box-shadow: 0 4px 0 #ddd6fe;
   font-size: 1.8rem;
+  font-size: clamp(1.4rem, 3.4dvh, 1.8rem);
   font-weight: 700;
   color: var(--color-primary-dark);
-  aspect-ratio: 1.4 / 1;
-  min-height: 64px;
+  /* Height follows the viewport rather than the key's width, so the four rows
+     always fit on screen; the plain fallback covers browsers without dvh. */
+  height: 64px;
+  height: clamp(44px, 8dvh, 76px);
   cursor: pointer;
 }
 
