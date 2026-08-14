@@ -18,7 +18,7 @@ describe('ProblemCard', () => {
   it('submits automatically once enough digits are entered, after a short delay', async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
     const onSubmit = vi.fn()
-    render(<ProblemCard problem={problem} globalRemainingMs={60_000} globalDurationMs={60_000} onSubmit={onSubmit} />)
+    render(<ProblemCard problem={problem} onSubmit={onSubmit} />)
 
     await user.click(screen.getByRole('button', { name: 'Digit 4' }))
     await user.click(screen.getByRole('button', { name: 'Digit 2' }))
@@ -33,7 +33,7 @@ describe('ProblemCard', () => {
   it('lets backspace remove a digit before the answer is complete', async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
     const onSubmit = vi.fn()
-    render(<ProblemCard problem={problem} globalRemainingMs={60_000} globalDurationMs={60_000} onSubmit={onSubmit} />)
+    render(<ProblemCard problem={problem} onSubmit={onSubmit} />)
 
     await user.click(screen.getByRole('button', { name: 'Digit 9' }))
     await user.click(screen.getByRole('button', { name: 'Backspace' }))
@@ -49,7 +49,7 @@ describe('ProblemCard', () => {
   it('disables the keypad while a submission is pending, so no further taps register', async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
     const onSubmit = vi.fn()
-    render(<ProblemCard problem={problem} globalRemainingMs={60_000} globalDurationMs={60_000} onSubmit={onSubmit} />)
+    render(<ProblemCard problem={problem} onSubmit={onSubmit} />)
 
     await user.click(screen.getByRole('button', { name: 'Digit 4' }))
     await user.click(screen.getByRole('button', { name: 'Digit 2' }))
@@ -70,7 +70,7 @@ describe('ProblemCard', () => {
       a: 2, b: 4, operation: 'fractionAddition', answer: 6, denominator: 7, answerDenominator: 7,
     }
     render(
-      <ProblemCard problem={fractionProblem} globalRemainingMs={60_000} globalDurationMs={60_000} onSubmit={onSubmit} />,
+      <ProblemCard problem={fractionProblem} onSubmit={onSubmit} />,
     )
 
     // The like denominator appears under both operands; the answer's is typed, not
@@ -91,7 +91,7 @@ describe('ProblemCard', () => {
     const onSubmit = vi.fn()
     const simplification: Problem = { a: 6, b: 8, operation: 'fractionSimplification', answer: 3, answerDenominator: 4 }
     render(
-      <ProblemCard problem={simplification} globalRemainingMs={60_000} globalDurationMs={60_000} onSubmit={onSubmit} />,
+      <ProblemCard problem={simplification} onSubmit={onSubmit} />,
     )
 
     await user.click(screen.getByRole('button', { name: 'Digit 3' }))
@@ -106,7 +106,7 @@ describe('ProblemCard', () => {
   it('ignores extra digits once the expected answer length is reached', async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
     const onSubmit = vi.fn()
-    render(<ProblemCard problem={problem} globalRemainingMs={60_000} globalDurationMs={60_000} onSubmit={onSubmit} />)
+    render(<ProblemCard problem={problem} onSubmit={onSubmit} />)
 
     await user.click(screen.getByRole('button', { name: 'Digit 4' }))
     await user.click(screen.getByRole('button', { name: 'Digit 2' }))

@@ -9,6 +9,10 @@ export interface CountdownRingProps {
 
 const STROKE_WIDTH = 10
 
+/* The drawing always uses this coordinate space; the size prop scales the whole
+   ring proportionally (stroke and label included), so small rings stay legible. */
+const VIEWBOX_SIZE = 96
+
 function colorForFraction(fraction: number): string {
   if (fraction > 0.5) return '#16a34a'
   if (fraction > 0.25) return '#f59e0b'
@@ -17,7 +21,7 @@ function colorForFraction(fraction: number): string {
 
 export function CountdownRing({ remainingMs, durationMs, size = 96, label }: CountdownRingProps) {
   const fraction = durationMs > 0 ? Math.min(1, Math.max(0, remainingMs / durationMs)) : 0
-  const radius = (size - STROKE_WIDTH) / 2
+  const radius = (VIEWBOX_SIZE - STROKE_WIDTH) / 2
   const circumference = 2 * Math.PI * radius
   const dashOffset = circumference * (1 - fraction)
   const displayLabel = label ?? String(Math.ceil(remainingMs / 1000))
@@ -27,15 +31,15 @@ export function CountdownRing({ remainingMs, durationMs, size = 96, label }: Cou
       className={styles.ring}
       width={size}
       height={size}
-      viewBox={`0 0 ${size} ${size}`}
+      viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`}
       role="timer"
       aria-label={`${displayLabel} left`}
     >
-      <circle className={styles.track} cx={size / 2} cy={size / 2} r={radius} strokeWidth={STROKE_WIDTH} />
+      <circle className={styles.track} cx={VIEWBOX_SIZE / 2} cy={VIEWBOX_SIZE / 2} r={radius} strokeWidth={STROKE_WIDTH} />
       <circle
         className={styles.progress}
-        cx={size / 2}
-        cy={size / 2}
+        cx={VIEWBOX_SIZE / 2}
+        cy={VIEWBOX_SIZE / 2}
         r={radius}
         strokeWidth={STROKE_WIDTH}
         stroke={colorForFraction(fraction)}

@@ -1,28 +1,18 @@
 import { useState } from 'react'
 import type { Problem } from '../game/types'
 import { OPERATION_SYMBOL } from '../game/operationSymbol'
-import { CountdownRing } from './CountdownRing'
 import { FractionValue } from './FractionValue'
 import { Keypad } from './Keypad'
 import styles from './ProblemCard.module.css'
 
 export interface ProblemCardProps {
   problem: Problem
-  globalRemainingMs: number
-  globalDurationMs: number
   onSubmit: (value: number, valueDenominator?: number) => void
 }
 
 const SUBMIT_DELAY_MS = 400
 
-function formatMinSec(ms: number): string {
-  const totalSeconds = Math.ceil(ms / 1000)
-  const minutes = Math.floor(totalSeconds / 60)
-  const seconds = totalSeconds % 60
-  return `${minutes}:${String(seconds).padStart(2, '0')}`
-}
-
-export function ProblemCard({ problem, globalRemainingMs, globalDurationMs, onSubmit }: ProblemCardProps) {
+export function ProblemCard({ problem, onSubmit }: ProblemCardProps) {
   const [input, setInput] = useState('')
   const [pendingSubmit, setPendingSubmit] = useState(false)
 
@@ -64,14 +54,6 @@ export function ProblemCard({ problem, globalRemainingMs, globalDurationMs, onSu
   return (
     <div className={styles.card}>
       <div className={styles.info}>
-        <div className={styles.header}>
-          <CountdownRing
-            remainingMs={globalRemainingMs}
-            durationMs={globalDurationMs}
-            label={formatMinSec(globalRemainingMs)}
-            size={96}
-          />
-        </div>
         {problem.operation === 'fractionSimplification' ? (
           <>
             <p className={styles.simplifyHint}>Simplify!</p>
