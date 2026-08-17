@@ -63,76 +63,43 @@ describe('ProblemCard', () => {
     expect(onSubmit).toHaveBeenCalledTimes(1)
   })
 
-  it('for fraction addition, submits the typed fraction after each part is confirmed with ✓', async () => {
+  it('for fraction addition, shows the operand denominators and submits the typed fraction', async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
     const onSubmit = vi.fn()
     const fractionProblem: Problem = {
       a: 2, b: 4, operation: 'fractionAddition', answer: 6, denominator: 7, answerDenominator: 7,
     }
-    render(<ProblemCard problem={fractionProblem} onSubmit={onSubmit} />)
+    render(
+      <ProblemCard problem={fractionProblem} onSubmit={onSubmit} />,
+    )
 
-    // The like denominator appears under both operands; the answer is typed freely
-    // (the selector excludes the keypad's own 7 button).
+    // The like denominator appears under both operands; the answer's is typed, not
+    // pre-filled (the selector excludes the keypad's own 7 button).
     expect(screen.getAllByText('7', { selector: ':not(button)' })).toHaveLength(2)
 
     await user.click(screen.getByRole('button', { name: 'Digit 6' }))
-    await user.click(screen.getByRole('button', { name: 'Confirm' }))
     expect(onSubmit).not.toHaveBeenCalled()
     await user.click(screen.getByRole('button', { name: 'Digit 7' }))
-    await user.click(screen.getByRole('button', { name: 'Confirm' }))
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(400)
+    })
     expect(onSubmit).toHaveBeenCalledWith(6, 7)
-  })
-
-  it('lets the child write an equivalent fraction with more digits than the expected answer', async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
-    const onSubmit = vi.fn()
-    // 1/8 + 3/8: expected 4/8, but 8/16 must be enterable too.
-    const fractionProblem: Problem = {
-      a: 1, b: 3, operation: 'fractionAddition', answer: 4, denominator: 8, answerDenominator: 8,
-    }
-    render(<ProblemCard problem={fractionProblem} onSubmit={onSubmit} />)
-
-    await user.click(screen.getByRole('button', { name: 'Digit 8' }))
-    await user.click(screen.getByRole('button', { name: 'Confirm' }))
-    await user.click(screen.getByRole('button', { name: 'Digit 1' }))
-    await user.click(screen.getByRole('button', { name: 'Digit 6' }))
-    await user.click(screen.getByRole('button', { name: 'Confirm' }))
-    expect(onSubmit).toHaveBeenCalledWith(8, 16)
   })
 
   it('for simplification, collects numerator then denominator before submitting both', async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
     const onSubmit = vi.fn()
     const simplification: Problem = { a: 6, b: 8, operation: 'fractionSimplification', answer: 3, answerDenominator: 4 }
-    render(<ProblemCard problem={simplification} onSubmit={onSubmit} />)
+    render(
+      <ProblemCard problem={simplification} onSubmit={onSubmit} />,
+    )
 
     await user.click(screen.getByRole('button', { name: 'Digit 3' }))
-    await user.click(screen.getByRole('button', { name: 'Confirm' }))
     expect(onSubmit).not.toHaveBeenCalled()
     await user.click(screen.getByRole('button', { name: 'Digit 4' }))
-    await user.click(screen.getByRole('button', { name: 'Confirm' }))
-    expect(onSubmit).toHaveBeenCalledWith(3, 4)
-  })
-
-  it('ignores ✓ on an empty part, and backspace crosses back over the fraction bar', async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
-    const onSubmit = vi.fn()
-    const simplification: Problem = { a: 6, b: 8, operation: 'fractionSimplification', answer: 3, answerDenominator: 4 }
-    render(<ProblemCard problem={simplification} onSubmit={onSubmit} />)
-
-    // ✓ with nothing typed stays on the numerator.
-    await user.click(screen.getByRole('button', { name: 'Confirm' }))
-    await user.click(screen.getByRole('button', { name: 'Digit 9' }))
-    expect(screen.getByLabelText('Numerator')).toHaveTextContent('9')
-
-    // Move to the denominator, then backspace twice: past the bar and into the numerator.
-    await user.click(screen.getByRole('button', { name: 'Confirm' }))
-    await user.click(screen.getByRole('button', { name: 'Backspace' }))
-    expect(screen.getByLabelText('Numerator')).toHaveTextContent('')
-    await user.click(screen.getByRole('button', { name: 'Digit 3' }))
-    await user.click(screen.getByRole('button', { name: 'Confirm' }))
-    await user.click(screen.getByRole('button', { name: 'Digit 4' }))
-    await user.click(screen.getByRole('button', { name: 'Confirm' }))
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(400)
+    })
     expect(onSubmit).toHaveBeenCalledWith(3, 4)
   })
 

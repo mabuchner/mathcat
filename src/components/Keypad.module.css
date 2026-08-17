@@ -37,10 +37,6 @@
   color: var(--color-warm);
 }
 
-.confirm {
-  color: var(--color-success);
-}
-
 @media (orientation: landscape) and (max-height: 560px) {
   .keypad {
     gap: 8px;

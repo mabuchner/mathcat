@@ -3,8 +3,6 @@ import styles from './Keypad.module.css'
 export interface KeypadProps {
   onDigit: (digit: number) => void
   onBackspace: () => void
-  /** When set, a ✓ key appears in the keypad's free corner (used by fraction answers). */
-  onConfirm?: () => void
   disabled?: boolean
 }
 
@@ -14,7 +12,7 @@ const DIGIT_ROWS = [
   [7, 8, 9],
 ]
 
-export function Keypad({ onDigit, onBackspace, onConfirm, disabled }: KeypadProps) {
+export function Keypad({ onDigit, onBackspace, disabled }: KeypadProps) {
   return (
     <div className={styles.keypad}>
       {DIGIT_ROWS.flat().map((digit) => (
@@ -47,17 +45,6 @@ export function Keypad({ onDigit, onBackspace, onConfirm, disabled }: KeypadProp
       >
         0
       </button>
-      {onConfirm && (
-        <button
-          type="button"
-          className={`${styles.key} ${styles.confirm}`}
-          disabled={disabled}
-          onClick={onConfirm}
-          aria-label="Confirm"
-        >
-          ✓
-        </button>
-      )}
     </div>
   )
 }

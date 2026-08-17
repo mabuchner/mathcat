@@ -110,24 +110,17 @@
   font-weight: 700;
 }
 
-/* One free-form box per fraction part, wide enough for two digits; the active
-   part is outlined so the child can see where the next digit will go. */
-.partBox {
-  min-width: 72px;
-  min-width: clamp(56px, 9dvh, 72px);
+.fractionAnswer .digitBox {
+  width: 42px;
+  width: clamp(30px, 5dvh, 42px);
   height: 48px;
-  height: clamp(36px, 6dvh, 48px);
-  margin: 3px 2px;
-  border-radius: 14px;
-  background: var(--color-surface);
-  border: 3px solid var(--color-ring-track);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: clamp(32px, 5.5dvh, 48px);
   font-size: 1.5rem;
   font-size: clamp(1.2rem, 3dvh, 1.5rem);
 }
 
-.partBoxActive {
-  border-color: var(--color-primary);
+.slotRow {
+  display: flex;
+  gap: 8px;
+  padding: 3px 2px;
 }
