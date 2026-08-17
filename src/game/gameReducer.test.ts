@@ -110,6 +110,11 @@ describe('gameReducer', () => {
     })
     expect(simplified.phase).toBe('correct')
 
+    const expanded = gameReducer(createInitialGameState(fractionAddition), {
+      type: 'SUBMIT_ANSWER', problemId: 0, value: 4, valueDenominator: 8,
+    })
+    expect(expanded.phase).toBe('correct')
+
     // Simplifying 2/4 demands lowest terms, so answering 2/4 itself is not enough.
     const simplification: Problem = { a: 2, b: 4, operation: 'fractionSimplification', answer: 1, answerDenominator: 2 }
     const unsimplified = gameReducer(createInitialGameState(simplification), {

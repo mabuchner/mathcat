@@ -27,7 +27,9 @@
 
 .operationChips {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* minmax(0, …) lets a column shrink below its longest label, so wordy chips
+     like "Simplify Fractions" wrap instead of pushing the grid off-screen. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
 

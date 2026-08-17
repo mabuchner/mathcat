@@ -15,7 +15,7 @@ const ALL_OPERATIONS: { value: Operation; label: string; numbersLabel: string }[
   { value: 'multiplication',         label: '× Multiply',  numbersLabel: 'Multiplication tables' },
   { value: 'fractionAddition',       label: '+ Fractions', numbersLabel: 'Denominators to add' },
   { value: 'fractionSubtraction',    label: '− Fractions', numbersLabel: 'Denominators to subtract' },
-  { value: 'fractionSimplification', label: '½ Simplify',  numbersLabel: 'Denominators to simplify' },
+  { value: 'fractionSimplification', label: 'Simplify Fractions', numbersLabel: 'Denominators to simplify' },
 ]
 
 interface Hints {
