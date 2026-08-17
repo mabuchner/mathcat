@@ -122,7 +122,7 @@ describe('SettingsPanel', () => {
   it('offers the fraction operations and adds one when clicked', async () => {
     const user = userEvent.setup()
     const { onChange } = renderPanel()
-    await user.click(screen.getByRole('button', { name: '½ Simplify' }))
+    await user.click(screen.getByRole('button', { name: 'Simplify Fractions' }))
     expect(onChange).toHaveBeenCalledWith({ operations: ['multiplication', 'fractionSimplification'] })
   })
 
