@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Confetti } from './Confetti'
 import styles from './MainMenu.module.css'
 
 export interface MainMenuProps {
@@ -15,6 +16,10 @@ const shareData = {
 
 export function MainMenu({ onPlay, onSettings, onHighScores }: MainMenuProps) {
   const [linkCopied, setLinkCopied] = useState(false)
+  // TEMPORARY: debug button to manually trigger confetti. Remove before shipping.
+  const [confettiKey, setConfettiKey] = useState(0)
+  const [logoTaps, setLogoTaps] = useState(0)
+  const devMenuUnlocked = logoTaps >= 10
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -33,7 +38,19 @@ export function MainMenu({ onPlay, onSettings, onHighScores }: MainMenuProps) {
 
   return (
     <div className={styles.menu}>
-      <p className={styles.logo}>🐱</p>
+      {/* TEMPORARY: dev cheat menu, unlocked by tapping the logo 10 times. Remove before shipping. */}
+      {devMenuUnlocked && (
+        <div style={{ position: 'fixed', top: 8, left: 8, zIndex: 100 }}>
+          <button type="button" onClick={() => setConfettiKey((key) => key + 1)}>
+            🎉 Confetti
+          </button>
+        </div>
+      )}
+      {confettiKey > 0 && <Confetti key={confettiKey} />}
+
+      <p className={styles.logo} onClick={() => setLogoTaps((taps) => taps + 1)}>
+        🐱
+      </p>
       <h1 className={styles.title}>MathCat</h1>
       <p className={styles.subtitle}>Math practice</p>
 

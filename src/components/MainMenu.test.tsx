@@ -56,4 +56,39 @@ describe('MainMenu', () => {
     expect(writeText).toHaveBeenCalledOnce()
     expect(await screen.findByRole('button', { name: /link copied/i })).toBeInTheDocument()
   })
+
+  it('keeps the dev menu hidden until the logo is tapped 10 times', async () => {
+    const user = userEvent.setup()
+    render(<MainMenu onPlay={() => {}} onSettings={() => {}} onHighScores={() => {}} />)
+    const logo = screen.getByText('🐱')
+
+    expect(screen.queryByRole('button', { name: /confetti/i })).not.toBeInTheDocument()
+
+    for (let tap = 0; tap < 9; tap++) {
+      await user.click(logo)
+    }
+    expect(screen.queryByRole('button', { name: /confetti/i })).not.toBeInTheDocument()
+
+    await user.click(logo)
+    expect(screen.getByRole('button', { name: /confetti/i })).toBeInTheDocument()
+  })
+
+  it('spawns confetti when the dev menu button is clicked', async () => {
+    const user = userEvent.setup()
+    const { container } = render(
+      <MainMenu onPlay={() => {}} onSettings={() => {}} onHighScores={() => {}} />,
+    )
+    const logo = screen.getByText('🐱')
+    for (let tap = 0; tap < 10; tap++) {
+      await user.click(logo)
+    }
+
+    expect(container.querySelector('[aria-hidden="true"]')).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /confetti/i }))
+
+    const confetti = container.querySelector('[aria-hidden="true"]')
+    expect(confetti).toBeInTheDocument()
+    expect(confetti?.querySelectorAll('span').length).toBeGreaterThan(0)
+  })
 })
