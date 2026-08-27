@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Confetti } from './Confetti'
 import styles from './MainMenu.module.css'
 
 export interface MainMenuProps {
@@ -15,6 +16,8 @@ const shareData = {
 
 export function MainMenu({ onPlay, onSettings, onHighScores }: MainMenuProps) {
   const [linkCopied, setLinkCopied] = useState(false)
+  // TEMPORARY: debug button to manually trigger confetti. Remove before shipping.
+  const [confettiKey, setConfettiKey] = useState(0)
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -33,6 +36,16 @@ export function MainMenu({ onPlay, onSettings, onHighScores }: MainMenuProps) {
 
   return (
     <div className={styles.menu}>
+      {/* TEMPORARY: debug button to manually trigger confetti. Remove before shipping. */}
+      <button
+        type="button"
+        onClick={() => setConfettiKey((key) => key + 1)}
+        style={{ position: 'fixed', top: 8, left: 8, zIndex: 100 }}
+      >
+        🎉 Confetti
+      </button>
+      {confettiKey > 0 && <Confetti key={confettiKey} />}
+
       <p className={styles.logo}>🐱</p>
       <h1 className={styles.title}>MathCat</h1>
       <p className={styles.subtitle}>Math practice</p>
